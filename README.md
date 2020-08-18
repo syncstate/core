@@ -39,7 +39,7 @@ Like:
 ## Highlights
 
 - SyncState is based on Redux that uses JSON patches for actions.
-- Also, it doesn't use `connect()` to connect state to React components, it's based on events (actions) for greater performance. It uses a `useDoc()`  hook that listens to the updates on the `path`  ([push strategy](https://twitter.com/kentcdodds/status/1180157212485771264)) that the component is listening to and forces an update. (like Recoil).
+- Also, it doesn't use `connect()` to connect state to React components, it's based on events (actions) for greater performance. It uses a `useDoc()` hook that listens to the updates on the `path` ([push strategy](https://twitter.com/kentcdodds/status/1180157212485771264)) that the component is listening to and forces an update. (like Recoil).
 - We don't pass down states to components but use paths instead. It works like an ID that can be used to re-render the components. It also helps in not maintaining `index` with actions like Redux.
 
 ## When to use it?
@@ -69,7 +69,7 @@ Yes, you can use it for general purpose state management. It only helps to adopt
 
 - SyncState doesn't use `react-redux` and it's `connect()` method, mainly to achieve higher performance. `connect()` method is always executed on the mounted components even if the component doesn't need a re-render. There are techniques to make the `connect()` method performant with `selection` and `caching` but the underlying philosophy remains the same.
 
-![No react-redux image](https://github.com/syncstate/syncstate/blob/master/assets/no-redux.png)
+![No react-redux image](https://github.com/syncstate/syncstate/blob/feat/readme/assets/no-redux.png)
 
 - SyncState uses Redux but the re-renders are based on **push-based state management** like MobX.
 
@@ -91,7 +91,6 @@ npm install @syncstate/core --save
 # Basic use-case
 
 ```jsx
-
 ```
 
 # Middlewares
@@ -99,12 +98,14 @@ npm install @syncstate/core --save
 [Undo Middleware](#undo-middleware)
 
 - REST middleware
-    - Connect the document to REST endpoints.
+  - Connect the document to REST endpoints.
 - GraphQL
-    - Use the GraphQL middleware to save / retrieve states from GraphQL enpoint
+  - Use the GraphQL middleware to save / retrieve states from GraphQL enpoint
 - Socket
-    - ...
+  - ...
+
 # Undo Middleware
+
 - Undo / Redo stack is local
 - Performing any Undo or Redo is a new patch on the document
 - Undo / Redo
@@ -174,6 +175,7 @@ add todo
 checkpoint
 check todo
 ```
+
 Built with ❤️ at GeekyAnts.
 
 **Author:** Sanket Sahu, Himanshu Satija & Rohit Singh
