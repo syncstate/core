@@ -96,7 +96,7 @@ npm install @syncstate/core --save
 
 # Middlewares
 
-[Undo Middleware](/#undo-middleware)
+[Undo Middleware](#undo-middleware)
 
 - REST middleware
     - Connect the document to REST endpoints.
