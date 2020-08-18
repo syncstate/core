@@ -1,167 +1,179 @@
-# TSDX React User Guide
+# 🧬 SyncState
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+SyncState is a **document-based state management library** for JS apps that can power realtime multi-user, offline-first, undoable states across systems.
 
-> This TSDX setup is meant for developing React components (not apps!) that can be published to NPM. If you’re looking to build an app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+**Functional & React-way**
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
+JSON patches as actions which can be transferred between the threads and sessions.
 
-## Commands
+**Like Redux, like MobX**
 
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
+The state is functional but the internal reactivity is based on the MobX approach.
 
-The recommended workflow is to run TSDX in one terminal:
+**Versioning** (Optional)
 
-```bash
-npm start # or yarn start
-```
+Undo / Redo middleware that stores the changes (instead of the app state).
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+**Server**
+(Optional)
 
-Then run the example inside another:
+Comes with a bit of server piece that works for conflict resolution.
 
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
-```
+## Use it for games or for documents
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, [we use Parcel's aliasing](https://github.com/palmerhq/tsdx/pull/88/files).
+Battle tested in BuilderX, a realtime collaborative design tool.
 
-To do a one-off build, use `npm run build` or `yarn build`.
+## Why do I need another state management library?
 
-To run tests, use `npm test` or `yarn test`.
+[We](https://geekyants.com) are a big fan of Redux, Recoil, MobX and MobX-State-Tree. Each one of them solve similar problems in their own ways. But, we have realized that building **realtime multi-user** apps requires a bit more effort than storing and retrieving states.
 
-## Configuration
+Like:
 
-Code quality is [set up for you](https://github.com/palmerhq/tsdx/pull/45/files) with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+- Efficient re-rendering of the mounted components.
+- Data syncing between threads & sessions.
+- Conflict resolution between multiple sessions.
+- Local History (Undo / Redo) & Remote History (Versioning).
+- Standard replay-able actions over custom actions.
+- Optimistic updates and reversal when invalid.
 
-### Jest
+## Highlights
 
-Jest tests are set up to run with `npm test` or `yarn test`. This runs the test watcher (Jest) in an interactive mode. By default, runs tests related to files changed since the last commit.
+- SyncState is based on Redux that uses JSON patches for actions.
+- Also, it doesn't use `connect()` to connect state to React components, it's based on events (actions) for greater performance. It uses a `useDoc()`  hook that listens to the updates on the `path`  ([push strategy](https://twitter.com/kentcdodds/status/1180157212485771264)) that the component is listening to and forces an update. (like Recoil).
+- We don't pass down states to components but use paths instead. It works like an ID that can be used to re-render the components. It also helps in not maintaining `index` with actions like Redux.
 
-#### Setup Files
+## When to use it?
 
-This is the folder structure we set up for you:
+If you are building a realtime document based app like Google Docs or Figma, SyncState can help solve a lot of your problems.
 
-```shell
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
-```
+## Can I use SyncState for general purpose apps?
 
-#### React Testing Library
+Yes, you can use it for general purpose state management. It only helps to adopt realtime and multi-user capabilities at a later stage.
 
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
+# Comparison with Redux
 
-### Rollup
+- SyncState uses `Redux` but doesn't use `react-redux`
+- We store patches (or actions) along with the state in the global store.
 
-TSDX uses [Rollup v1.x](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### Travis
-
-_to be completed_
-
-### Circle
-
-_to be completed_
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
+```jsx
+{
+    doc: {},
+    patches: []
 }
 ```
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+- State can be computed by applying the series of patches.
+- We pass down `paths` instead of a part of the `state`
 
-## Module Formats
+### No react-redux
 
-CJS, ESModules, and UMD module formats are supported.
+- SyncState doesn't use `react-redux` and it's `connect()` method, mainly to achieve higher performance. `connect()` method is always executed on the mounted components even if the component doesn't need a re-render. There are techniques to make the `connect()` method performant with `selection` and `caching` but the underlying philosophy remains the same.
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+![No react-redux image](https://github.com/syncstate/syncstate/blob/master/assets/no-redux.png)
 
-## Using the Playground
+- SyncState uses Redux but the re-renders are based on **push-based state management** like MobX.
 
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+# Comparison with Recoil
+
+- Uses the performant re-renders like Recoil. Recoil works on ID whereas SyncState works on Document Paths.
+
+# Comparison with MobX & MST
+
+- Uses the performant re-renders like MobX.
+- It's not directly mutable like MobX & MST but the same can be easily achieved here with the usage of Immer.js because Immer generates patches along with the next state. SyncState needs patches to generate the next state and emit the same to the connected sessions.
+
+# Getting started
+
+```jsx
+npm install @syncstate/core --save
 ```
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**!
+# Basic use-case
 
-## Deploying the Playground
+```jsx
 
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
-
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+# Middlewares
 
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
+[Undo Middleware](/#undo-middleware)
+
+- REST middleware
+    - Connect the document to REST endpoints.
+- GraphQL
+    - Use the GraphQL middleware to save / retrieve states from GraphQL enpoint
+- Socket
+    - ...
+# Undo Middleware {#undo-middleware}
+- Undo / Redo stack is local
+- Performing any Undo or Redo is a new patch on the document
+- Undo / Redo
+
+```tsx
+import { syncstateHistory, undoable, enableUndoCheckpoint } from "syncstate-history";
+
+const doc = createDoc(
+  { todos: [], filter: 'all' },
+  applyMiddleware(syncstateHistory)
+);
+
+enableUndoCheckpoint()
+
+undoable((patch) => {
+	if(patch.path.startsWith("/todos") {
+		return true;
+	}
+});
+
+// Undo action
+doc.dispatch({
+	type: "UNDO"
+})
+
+// Redo action
+doc.dispatch({
+	type: "REDO"
+})
+
+// Undo action
+doc.dispatch({
+	type: "UNDO_TILL_BREAKPOINT"
+})
+
+// Redo action
+doc.dispatch({
+	type: "REDO_TILL_BREAKPOINT"
+})
+
+doc.dispatch({
+	type: "INSERT_UNDO_BREAKPOINT"
+})
+
+// Checkpoint patch
+dispatch({
+  type: 'PATCH',
+  payload: {
+	  op: 'add',
+	  path: todoPath + '/-',
+	  value: {
+	    caption: todoItem,
+	    completed: false,
+	  },
+	},
+});
 ```
 
-## Named Exports
+# Differences with redux-undo
 
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+- It doesn't replace with the entire snapshot of the app. Instead it applies a patch on the document from the Undo / Redo stack.
 
-## Including Styles
-
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
+```tsx
+add todo
+checkpoint
+add todo
+checkpoint
+check todo
 ```
+Built with ❤️ at GeekyAnts.
 
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+**Author:** Sanket Sahu, Himanshu Satija & Rohit Singh
