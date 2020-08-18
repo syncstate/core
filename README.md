@@ -104,7 +104,7 @@ npm install @syncstate/core --save
     - Use the GraphQL middleware to save / retrieve states from GraphQL enpoint
 - Socket
     - ...
-# Undo Middleware {#undo-middleware}
+# Undo Middleware
 - Undo / Redo stack is local
 - Performing any Undo or Redo is a new patch on the document
 - Undo / Redo
