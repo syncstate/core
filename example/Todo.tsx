@@ -18,10 +18,6 @@ export function TodoApp() {
   useEffect(() => {
     dispatch(history.watchPath(['todos']));
   }, []);
-
-  // TODO: can't do this, create a hook maybe?
-  const doc: any = React.useContext(SyncStateReactContext);
-
   // if (!doc.getState().loaded) {
   //   return <div>Loading...</div>;
   // }
