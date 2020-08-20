@@ -2,7 +2,7 @@
   "name": "@syncstate/syncstate",
   "author": "Sanket Sahu, Himanshu Satija",
   "module": "dist/core-new.esm.js",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
