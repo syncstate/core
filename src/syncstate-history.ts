@@ -95,7 +95,7 @@ export const syncStateHistory = {
         {
           action.payload.forEach((patchObj: any) => {
             const undoablePath = getUndoablePath(store, patchObj.patch.path);
-            if (undoablePath) {
+            if (undoablePath !== undefined) {
               store.dispatch({
                 type: 'ADD_UNDO_PATCH',
                 payload: { patchObj, undoablePath },
