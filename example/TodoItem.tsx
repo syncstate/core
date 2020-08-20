@@ -1,28 +1,36 @@
 import { useDoc } from '../src';
 import * as React from 'react';
+import get = require('lodash.get');
 
 export function TodoItem({ todoItemPath }) {
-  const [todoItem, dispatch] = useDoc(todoItemPath);
+  console.log(todoItemPath, 'todoItemPath');
+  const [todoItem, setTodoItem, dispatch] = useDoc(todoItemPath);
 
   const updateTodoItemCaption = (caption: string) => {
-    dispatch({
-      type: 'PATCH',
-      payload: {
-        op: 'replace',
-        path: todoItemPath + '/caption',
-        value: caption,
-      },
+    setTodoItem(todoItem => {
+      todoItem.caption = caption;
     });
+    // dispatch({
+    //   type: 'PATCH',
+    //   payload: {
+    //     op: 'replace',
+    //     path: todoItemPath + '/caption',
+    //     value: caption,
+    //   },
+    // });
   };
   const updateTodoItemCompleted = (completed: boolean) => {
-    dispatch({
-      type: 'PATCH',
-      payload: {
-        op: 'replace',
-        path: todoItemPath + '/completed',
-        value: completed,
-      },
+    setTodoItem(todoItem => {
+      todoItem.completed = completed;
     });
+    // dispatch({
+    //   type: 'PATCH',
+    //   payload: {
+    //     op: 'replace',
+    //     path: todoItemPath + '/completed',
+    //     value: completed,
+    //   },
+    // });
   };
 
   return (

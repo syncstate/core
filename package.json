@@ -1,4 +1,7 @@
 {
+  "name": "core-new",
+  "author": "Sanket Sahu, Himanshu Satija",
+  "module": "dist/core-new.esm.js",
   "version": "0.1.0",
   "license": "MIT",
   "main": "dist/index.js",
@@ -31,13 +34,11 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "core-new",
-  "author": "Himanshu Satija",
-  "module": "dist/core-new.esm.js",
   "devDependencies": {
     "@types/lodash.get": "^4.4.6",
     "@types/react": "^16.9.46",
     "@types/react-dom": "^16.9.8",
+    "@types/socket.io-client": "^1.4.33",
     "husky": "^4.2.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -47,7 +48,9 @@
   },
   "dependencies": {
     "fast-json-patch": "^3.0.0-1",
+    "immer": "^7.0.7",
     "lodash.get": "^4.4.2",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "socket.io-client": "^2.3.0"
   }
 }

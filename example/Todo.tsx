@@ -1,23 +1,32 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { useDoc } from '../src';
+import { useDoc, history } from '../src';
 import { TodoItem } from './TodoItem';
-import { useState } from 'react';
-import SyncStateReactContext from '../src/syncstate-react/components/Context';
+import { useState, useEffect } from 'react';
+import { SyncStateReactContext } from '../src/syncstate-react/components/Context';
 
 export function TodoApp() {
-  const todoPath = '/todos';
-  const filterPath = '/filter';
+  const todoPath = ['todos'];
+  const filterPath = ['filter'];
 
-  const [todos, dispatch] = useDoc(todoPath);
+  const [todos, setTodos, dispatch] = useDoc(todoPath);
   const [todoFilter] = useDoc(filterPath);
+  const [state, setState] = useDoc();
+
+  const [input, setInput] = useState('');
+
+  useEffect(() => {
+    dispatch(history.watchPath(['todos']));
+  }, []);
 
   // TODO: can't do this, create a hook maybe?
   const doc: any = React.useContext(SyncStateReactContext);
 
-  const [input, setInput] = useState('');
+  // if (!doc.getState().loaded) {
+  //   return <div>Loading...</div>;
+  // }
 
-  console.log('todos', todos);
+  // console.log('todos', todos);
 
   const filteredTodos = todos
     .map((todoItem, index) => ({ todoItem, index }))
@@ -31,29 +40,23 @@ export function TodoApp() {
       }
     });
 
-  console.log(filteredTodos, 'filteredTodos');
+  // console.log(filteredTodos, 'filteredTodos');
 
   const addTodo = todoItem => {
-    dispatch({
-      type: 'PATCH',
-      payload: {
-        op: 'add',
-        path: todoPath + '/-',
-        value: {
-          caption: todoItem,
-          completed: false,
-        },
-      },
+    // dispatch({
+    //   type: 'INSERT_UNDO_BREAKPOINT',
+    //   payload: { path: ['todos', 0] },
+    // });
+    setTodos(todos => {
+      todos.push({
+        caption: todoItem,
+        completed: false,
+      });
     });
   };
   const modifyFilter = filter => {
-    dispatch({
-      type: 'PATCH',
-      payload: {
-        op: 'replace',
-        path: filterPath,
-        value: filter,
-      },
+    setState(state => {
+      state.filter = filter;
     });
   };
 
@@ -102,7 +105,7 @@ export function TodoApp() {
           {filteredTodos.map(todoItemWithIndex => (
             <TodoItem
               key={todoItemWithIndex.todoItem.caption}
-              todoItemPath={todoPath + '/' + todoItemWithIndex.index}
+              todoItemPath={[...todoPath, todoItemWithIndex.index]}
             />
           ))}
         </ul>
@@ -118,17 +121,31 @@ export function TodoApp() {
       <div>
         <button
           onClick={() => {
-            doc.dispatch({ type: 'UNDO' });
+            dispatch(history.undoPath(['todos']));
           }}
         >
           Undo
         </button>
         <button
           onClick={() => {
-            doc.dispatch({ type: 'REDO' });
+            dispatch(history.redoPath(['todos']));
           }}
         >
           Redo
+        </button>
+        <button
+          onClick={() => {
+            dispatch(history.undoPathTillBreakpoint(['todos']));
+          }}
+        >
+          Undo till breakpoint
+        </button>
+        <button
+          onClick={() => {
+            dispatch(history.redoPathTillBreakpoint(['todos']));
+          }}
+        >
+          Redo till breakpoint
         </button>
       </div>
     </div>

@@ -1,20 +1,16 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { createDoc, Provider, useDoc, syncstateHistory } from '../src';
+import { createDoc, Provider, useDoc, history } from '../src';
 import { useState } from 'react';
 import { TodoApp } from './Todo';
 import { applyMiddleware } from 'redux';
 
-const doc = createDoc(
-  { todos: [], filter: 'all' },
-  applyMiddleware(syncstateHistory)
-);
+const doc = createDoc({ todos: [], filter: 'all' }, [history.syncStateHistory]);
+
+// undoable(() => true);
 
 const App = () => {
-  const path = '/hello';
-  const [value, dispatch] = useDoc(path);
-
   return (
     <div>
       <TodoApp />
