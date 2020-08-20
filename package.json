@@ -1,5 +1,5 @@
 {
-  "name": "core-new",
+  "name": "@syncstate/syncstate",
   "author": "Sanket Sahu, Himanshu Satija",
   "module": "dist/core-new.esm.js",
   "version": "0.2.0",
