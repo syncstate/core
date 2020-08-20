@@ -13,6 +13,11 @@ store.setDoc(doc => {
 });
 // undoable(() => true);
 
+store.watchPath(['todos'], ({ patch, inversePatch }) => {
+  console.log('patch generated at todos path');
+  console.log('patch, inversePatch', patch, inversePatch);
+});
+
 const App = () => {
   return (
     <div>

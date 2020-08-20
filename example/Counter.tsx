@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { createDoc, Provider, history } from '../src';
+import { createDocStore, Provider, history } from '../src';
 
 import { useDoc } from '../src';
 
-const doc = createDoc({ count: 0 }, [history.syncStateHistory]);
+const store = createDocStore({ count: 0 }, [history.plugin]);
 
 function App() {
   const [doc, setDoc, dispatch] = useDoc();
@@ -52,7 +52,7 @@ function App() {
 
 const rootElement = document.getElementById('root');
 ReactDOM.render(
-  <Provider doc={doc}>
+  <Provider store={store}>
     <App />
   </Provider>,
   rootElement

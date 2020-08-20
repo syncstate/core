@@ -7,6 +7,7 @@ import {
 import { applyPatches, produceWithPatches } from 'immer';
 import get from 'lodash.get';
 import socketIOClient from 'socket.io-client';
+import { createWatchMiddleware } from './watchMiddleware';
 
 export function docReducer(
   state: {
@@ -66,6 +67,8 @@ export function createDocStore(initialDoc: {}, plugins: Array<any>) {
     },
   };
 
+  const watchCallbacks:any = []
+
   const reducers: any = { doc: docReducer };
 
   plugins.forEach(p => {
@@ -77,7 +80,7 @@ export function createDocStore(initialDoc: {}, plugins: Array<any>) {
   const store: any = createStore(
     rootReducer,
     initialState,
-    applyMiddleware(...plugins.map(p => p.middleware))
+    applyMiddleware(...plugins.map(p => p.middleware), createWatchMiddleware(watchCallbacks))
   );
 
   // @ts-ignore
@@ -98,6 +101,8 @@ export function createDocStore(initialDoc: {}, plugins: Array<any>) {
 
   console.log(store.getState());
 
+  
+
   return {
     store,
     getState: () => {
@@ -115,9 +120,10 @@ export function createDocStore(initialDoc: {}, plugins: Array<any>) {
     onPatchPattern: (path: string, cb: any) => {
       store.subscribe(cb);
     },
-    // watchPath: (path: Array<string|number> = []) => {
-
-    // },
+    watchPath: (path: Array<string|number> = [], callback:any) => {
+      
+      watchCallbacks.push({path, callback})
+    },
     setDoc: (cb: any) => {
       if (typeof cb !== 'function') {
         throw new Error(
@@ -142,10 +148,6 @@ export function createDocStore(initialDoc: {}, plugins: Array<any>) {
       });
     },
   };
-}
-
-function watchPath () {
-
 }
 
 

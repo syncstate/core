@@ -3,7 +3,6 @@ import * as React from 'react';
 import get = require('lodash.get');
 
 export function TodoItem({ todoItemPath }) {
-  console.log(todoItemPath, 'todoItemPath');
   const [todoItem, setTodoItem, dispatch] = useDoc(todoItemPath);
 
   const updateTodoItemCaption = (caption: string) => {
