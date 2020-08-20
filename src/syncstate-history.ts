@@ -86,7 +86,7 @@ export const getUndoablePath = (store: any, path: Array<string | number>) => {
   return undoablePath;
 };
 
-export const syncStateHistory = {
+export const plugin = {
   middleware: (store: any) => (next: any) => (action: any) => {
     const state = store.getState();
 

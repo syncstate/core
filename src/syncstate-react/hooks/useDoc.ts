@@ -28,7 +28,7 @@ export function useDoc(path: Array<string | number> = []) {
           'Received an object. Expecting a callback function which receives the object you want to modify.'
         );
       }
-      const state = doc.getState().docState;
+
       // @ts-ignore
       let [nextState, patches, inversePatches] = produceWithPatches(
         stateAtPath,

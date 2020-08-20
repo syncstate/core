@@ -100,7 +100,7 @@ export function TodoApp() {
         <ul>
           {filteredTodos.map(todoItemWithIndex => (
             <TodoItem
-              key={todoItemWithIndex.todoItem.caption}
+              key={todoItemWithIndex.index} // should not be index ideally, use some kind of id
               todoItemPath={[...todoPath, todoItemWithIndex.index]}
             />
           ))}

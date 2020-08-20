@@ -4,7 +4,7 @@ import {
   combineReducers,
   applyMiddleware,
 } from 'redux';
-import { applyPatches } from 'immer';
+import { applyPatches, produceWithPatches } from 'immer';
 import get from 'lodash.get';
 import socketIOClient from 'socket.io-client';
 
@@ -53,7 +53,7 @@ export function docReducer(
   }
 }
 
-export function createDoc(initialDoc: {}, plugins: Array<any>) {
+export function createDocStore(initialDoc: {}, plugins: Array<any>) {
   // const socket = socketIOClient('http://localhost:3001', {
   //   timeout: 100000,
   // });
@@ -115,9 +115,41 @@ export function createDoc(initialDoc: {}, plugins: Array<any>) {
     onPatchPattern: (path: string, cb: any) => {
       store.subscribe(cb);
     },
+    // watchPath: (path: Array<string|number> = []) => {
+
+    // },
+    setDoc: (cb: any) => {
+      if (typeof cb !== 'function') {
+        throw new Error(
+          'Received an object. Expecting a callback function which receives the object you want to modify.'
+        );
+      }
+
+      // @ts-ignore
+      let [nextState, patches, inversePatches] = produceWithPatches(
+        store.getState().doc.docState,
+        (draft: any) => {
+          cb(draft);
+        }
+      );
+
+      store.dispatch({
+        type: 'PATCHES',
+        payload: patches.map((patch: any, index: number) => ({
+          patch: patch,
+          inversePatch: inversePatches[index],
+        })),
+      });
+    },
   };
 }
 
+function watchPath () {
+
+}
+
+
 export * from './syncstate-react';
 export * as history from './syncstate-history';
+
 

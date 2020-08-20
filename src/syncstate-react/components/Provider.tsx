@@ -3,14 +3,14 @@ import React, { ReactChildren, ReactChild } from 'react';
 import { SyncStateReactContext } from './Context';
 
 export function Provider({
-  doc,
+  store,
   children,
 }: {
-  doc: any;
+  store: any;
   children: ReactChildren | ReactChild;
 }) {
   return (
-    <SyncStateReactContext.Provider value={doc}>
+    <SyncStateReactContext.Provider value={store}>
       {children}
     </SyncStateReactContext.Provider>
   );
