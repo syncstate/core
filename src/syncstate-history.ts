@@ -54,6 +54,13 @@ export const redoPathTillBreakpoint = (path: Array<string | number>) => {
   };
 };
 
+export const insertUndoBreakpoint = (path: Array<string | number> = []) => {
+  return {
+    type: 'INSERT_UNDO_BREAKPOINT',
+    payload: { path: path },
+  };
+};
+
 export const watchPath = (path: Array<string | number>) => {
   return {
     type: 'WATCH_PATH',

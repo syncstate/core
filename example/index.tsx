@@ -13,10 +13,14 @@ store.setDoc(doc => {
 });
 // undoable(() => true);
 
-store.watchPath(['todos'], ({ patch, inversePatch }) => {
+const unwatch = store.watchPath(['todos'], ({ patch, inversePatch }) => {
   console.log('patch generated at todos path');
   console.log('patch, inversePatch', patch, inversePatch);
 });
+
+setTimeout(() => {
+  unwatch();
+}, 10000);
 
 const App = () => {
   return (

@@ -14,7 +14,9 @@ export function useDoc(path: Array<string | number> = []) {
   const doc: any = useContext(SyncStateReactContext);
 
   useEffect(() => {
-    doc.onPatchPattern(path, () => forceUpdate());
+    const unwatch = doc.watchPath(path, () => forceUpdate());
+
+    return unwatch;
   }, []);
   // console.log(path, doc.getStateAtPath(path), 'doc.getStateAtPath(path)');
 

@@ -1,12 +1,10 @@
 import {
   createStore,
-  StoreEnhancer,
   combineReducers,
   applyMiddleware,
 } from 'redux';
 import { applyPatches, produceWithPatches } from 'immer';
 import get from 'lodash.get';
-import socketIOClient from 'socket.io-client';
 import { createWatchMiddleware } from './watchMiddleware';
 
 export function docReducer(
@@ -54,7 +52,7 @@ export function docReducer(
   }
 }
 
-export function createDocStore(initialDoc: {}, plugins: Array<any>) {
+export function createDocStore(initialDoc: {}, plugins?: Array<any>) {
   // const socket = socketIOClient('http://localhost:3001', {
   //   timeout: 100000,
   // });
@@ -67,21 +65,36 @@ export function createDocStore(initialDoc: {}, plugins: Array<any>) {
     },
   };
 
-  const watchCallbacks:any = []
+  const watchCallbacks: any = [];
 
   const reducers: any = { doc: docReducer };
 
-  plugins.forEach(p => {
-    reducers[p.reducer.name] = p.reducer.reducer;
-  });
+  if (plugins) {
+    plugins.forEach(p => {
+      reducers[p.reducer.name] = p.reducer.reducer;
+    });
+  }
   const rootReducer = combineReducers(reducers);
   console.log(reducers, 'reducers');
-  // @ts-ignore
-  const store: any = createStore(
-    rootReducer,
-    initialState,
-    applyMiddleware(...plugins.map(p => p.middleware), createWatchMiddleware(watchCallbacks))
-  );
+
+  let store: any;
+  if (plugins) {
+    // @ts-ignore
+    store = createStore(
+      rootReducer,
+      initialState,
+      applyMiddleware(
+        ...plugins.map(p => p.middleware),
+        createWatchMiddleware(watchCallbacks)
+      )
+    );
+  } else {
+    store = createStore(
+      rootReducer,
+      initialState,
+      applyMiddleware(createWatchMiddleware(watchCallbacks))
+    );
+  }
 
   // @ts-ignore
   window['store'] = store;
@@ -101,8 +114,6 @@ export function createDocStore(initialDoc: {}, plugins: Array<any>) {
 
   console.log(store.getState());
 
-  
-
   return {
     store,
     getState: () => {
@@ -118,11 +129,16 @@ export function createDocStore(initialDoc: {}, plugins: Array<any>) {
       return get(state, path.join('.'));
     },
     onPatchPattern: (path: string, cb: any) => {
-      store.subscribe(cb);
+      const unsubscribe = store.subscribe(cb);
+      return unsubscribe;
     },
-    watchPath: (path: Array<string|number> = [], callback:any) => {
-      
-      watchCallbacks.push({path, callback})
+    watchPath: (path: Array<string | number> = [], callback: any) => {
+      const newLength = watchCallbacks.push({ path, callback });
+      const watchIndex = newLength - 1;
+
+      return () => {
+        watchCallbacks.splice(watchIndex, 1);
+      };
     },
     setDoc: (cb: any) => {
       if (typeof cb !== 'function') {
@@ -150,8 +166,5 @@ export function createDocStore(initialDoc: {}, plugins: Array<any>) {
   };
 }
 
-
 export * from './syncstate-react';
 export * as history from './syncstate-history';
-
-
