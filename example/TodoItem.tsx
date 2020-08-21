@@ -1,4 +1,4 @@
-import { useDoc } from '../src';
+import { useDoc } from '@syncstate/react';
 import * as React from 'react';
 import get = require('lodash.get');
 

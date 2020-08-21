@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { useDoc, history } from '../src';
+import history from '@syncstate/history';
+import { useDoc } from '@syncstate/react';
 import { TodoItem } from './TodoItem';
 import { useState, useEffect } from 'react';
-import { SyncStateReactContext } from '../src/syncstate-react/components/Context';
 
 export function TodoApp() {
   const todoPath = ['todos'];

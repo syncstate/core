@@ -1,8 +1,4 @@
-import {
-  createStore,
-  combineReducers,
-  applyMiddleware,
-} from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { applyPatches, produceWithPatches } from 'immer';
 import get from 'lodash.get';
 import { createWatchMiddleware } from './watchMiddleware';
@@ -165,6 +161,3 @@ export function createDocStore(initialDoc: {}, plugins?: Array<any>) {
     },
   };
 }
-
-export * from './syncstate-react';
-export * as history from './syncstate-history';

@@ -8,6 +8,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "@syncstate/history": "../../history",
+    "@syncstate/react": "../../react",
     "react-app-polyfill": "^1.0.0"
   },
   "alias": {

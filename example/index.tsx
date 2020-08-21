@@ -1,10 +1,12 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { createDocStore, Provider, useDoc, history } from '../src';
+import { createDocStore } from '../src';
 import { useState } from 'react';
 import { TodoApp } from './Todo';
 import { applyMiddleware } from 'redux';
+import history from '@syncstate/history';
+import { Provider } from '@syncstate/react';
 
 const store = createDocStore({ todos: [], filter: 'all' }, [history.plugin]);
 
