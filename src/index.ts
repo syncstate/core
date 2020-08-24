@@ -1,7 +1,8 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { applyPatches, produceWithPatches } from 'immer';
+import { applyPatches, produceWithPatches, enablePatches } from 'immer';
 import get from 'lodash.get';
 import { createWatchMiddleware } from './watchMiddleware';
+enablePatches();
 
 export function docReducer(
   state: {
