@@ -111,7 +111,12 @@ export function TodoApp() {
         value={input}
         onChange={e => setInput(e.target.value)}
       />
-      <button type="button" onClick={() => addTodo(input)}>
+      <button
+        type="button"
+        onClick={() => {
+          addTodo(input);
+        }}
+      >
         Add Todo
       </button>
       <div>

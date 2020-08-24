@@ -12,6 +12,8 @@ const store = createDocStore({ todos: [], filter: 'all' }, [history.plugin]);
 store.setDoc(doc => {
   doc.test = 'Awdwdwdd';
 });
+const [doc, setDoc] = store.useDoc();
+setDoc(doc => (doc.test = 'paihwdih'));
 // undoable(() => true);
 
 const unwatch = store.watchPath(['todos'], ({ patch, inversePatch }) => {
