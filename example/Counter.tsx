@@ -1,8 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { createDocStore, Provider, history } from '../src';
-
-import { useDoc } from '../src';
+import { createDocStore } from '../src';
+// import './styles.css';
+import { useDoc, Provider } from '@syncstate/react';
+import history from '@syncstate/history';
+console.log(history, 'history');
 
 const store = createDocStore({ count: 0 }, [history.plugin]);
 
@@ -21,7 +23,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Counter with SyncState</h1>
+      <h1>Counter (Undo/Redo) with SyncState</h1>
       <div>
         <button onClick={decrement}>-</button>
         &nbsp;&nbsp;

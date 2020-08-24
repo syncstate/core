@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { applyPatches, produceWithPatches, enablePatches } from 'immer';
 import get from 'lodash.get';
 import { createWatchMiddleware } from './watchMiddleware';
@@ -33,7 +33,7 @@ export function docReducer(
         ...state,
         docState: applyPatches(
           state.docState,
-          // action payload should look like this [{patch:{...}, inversePatch:{...}}]
+          // action payload contains a single patch
           [action.payload]
         ),
         docPatches: [...state.docPatches, action.payload],
@@ -74,22 +74,33 @@ export function createDocStore(initialDoc: {}, plugins?: Array<any>) {
   const rootReducer = combineReducers(reducers);
   console.log(reducers, 'reducers');
 
+  const composeEnhancers =
+    typeof window === 'object' &&
+    process.env.NODE_ENV !== 'production' &&
+    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+      ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+          // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+        })
+      : compose;
+
   let store: any;
   if (plugins) {
     // @ts-ignore
     store = createStore(
       rootReducer,
       initialState,
-      applyMiddleware(
-        ...plugins.map(p => p.middleware),
-        createWatchMiddleware(watchCallbacks)
+      composeEnhancers(
+        applyMiddleware(
+          ...plugins.map(p => p.middleware),
+          createWatchMiddleware(watchCallbacks)
+        )
       )
     );
   } else {
     store = createStore(
       rootReducer,
       initialState,
-      applyMiddleware(createWatchMiddleware(watchCallbacks))
+      composeEnhancers(applyMiddleware(createWatchMiddleware(watchCallbacks)))
     );
   }
 
