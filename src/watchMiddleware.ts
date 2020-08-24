@@ -8,6 +8,12 @@ export const createWatchMiddleware = (watchCallbacks: any) => {
           }
         });
       });
+    } else if (action.type === 'SINGLE_PATCH') {
+      watchCallbacks.forEach((watch: any) => {
+        if (action.payload.path.join('/').startsWith(watch.path.join('/'))) {
+          watch.callback({ patch: action.payload });
+        }
+      });
     }
 
     next(action);
