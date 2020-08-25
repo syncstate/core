@@ -14,6 +14,8 @@ store.setDoc(doc => {
 });
 const [doc, setDoc] = store.useDoc();
 setDoc(doc => (doc.test = 'paihwdih'));
+const [test, setTest] = store.useDoc(['test']);
+setTest('kkkkkk');
 // undoable(() => true);
 
 const unwatch = store.watchPath(['todos'], ({ patch, inversePatch }) => {

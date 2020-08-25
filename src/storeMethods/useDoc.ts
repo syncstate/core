@@ -1,23 +1,42 @@
 import { produceWithPatches } from 'immer';
+import DocStore from '../DocStore';
 
-export default function useDoc(store: any, path: Array<string | number>) {
-  const stateAtPath = store.getStateAtPath(path);
+export default function useDoc(store: DocStore, path: Array<string | number>) {
+  let stateAtPath = store.getStateAtPath(path);
 
   return [
     stateAtPath,
-    (cb: any) => {
-      if (typeof cb !== 'function') {
-        throw new Error(
-          'Received an object. Expecting a callback function which receives the object you want to modify.'
-        );
+    (callbackOrData: any) => {
+      let replaceValue = false;
+      if (typeof callbackOrData !== 'function') {
+        // throw new Error(
+        //   'Received an object. Expecting a callback function which receives the object you want to modify.'
+        // );
+        replaceValue = true;
       }
 
+      let produceCallback = (draft: any) => {
+        callbackOrData(draft);
+      };
+
+      if (replaceValue) {
+        // replace the received value in its parent
+        // let parentPath = [...path];
+        const childKey = path.pop();
+        stateAtPath = store.getStateAtPath(path);
+        produceCallback = (draft: any) => {
+          if (childKey) {
+            draft[childKey] = callbackOrData;
+          } else {
+            // if root path
+            throw new Error('Cannot replace root doc');
+          }
+        };
+      }
       // @ts-ignore
       let [nextState, patches, inversePatches] = produceWithPatches(
         stateAtPath,
-        (draft: any) => {
-          cb(draft);
-        }
+        produceCallback
       );
       // console.log(path, 'path');
       // console.log(JSON.stringify(patches, null, 2), 'patches before');
