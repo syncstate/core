@@ -3,7 +3,7 @@ import { applyPatches, produceWithPatches, enablePatches } from 'immer';
 import DocStore from './DocStore';
 enablePatches();
 
-export function docReducer(
+function docReducer(
   state: {
     docState: any;
     docPatches: [];
@@ -16,26 +16,21 @@ export function docReducer(
   action: any
 ) {
   switch (action.type) {
-    case 'PATCHES':
-      return {
-        ...state,
-        docState: applyPatches(
-          state.docState,
-          // action payload should look like this [{patch:{...}, inversePatch:{...}}]
-          action.payload.map((patchObj: any) => patchObj.patch)
-        ),
-        docPatches: [...state.docPatches, ...action.payload],
-      };
-
-    case 'SINGLE_PATCH':
+    case 'PATCH':
       return {
         ...state,
         docState: applyPatches(
           state.docState,
           // action payload contains a single patch
-          [action.payload]
+          [action.payload.patch]
         ),
-        docPatches: [...state.docPatches, action.payload],
+        docPatches: [
+          ...state.docPatches,
+          {
+            patch: action.payload.patch,
+            inversePatch: action.payload.inversePatch,
+          },
+        ],
       };
 
     case 'SET_LOADED':

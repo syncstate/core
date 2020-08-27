@@ -1,7 +1,11 @@
 import { produceWithPatches } from 'immer';
 import DocStore from '../DocStore';
 
-export default function useDoc(store: DocStore, path: Array<string | number>) {
+export default function useDoc(
+  store: DocStore,
+  path: Array<string | number>,
+  depth: number
+) {
   let stateAtPath = store.getStateAtPath(path);
 
   return [
@@ -49,13 +53,20 @@ export default function useDoc(store: DocStore, path: Array<string | number>) {
       });
       // console.log(JSON.stringify(patches, null, 2), 'patches');
 
-      store.dispatch({
-        type: 'PATCHES',
-        payload: patches.map((patch: any, index: number) => ({
-          patch: patch,
-          inversePatch: inversePatches[index],
-        })),
+      patches.forEach((patch: any, index: number) => {
+        store.dispatch({
+          type: 'PATCH',
+          payload: { patch, inversePatch: inversePatches[index] },
+        });
       });
+
+      // store.dispatch({
+      //   type: 'PATCHES',
+      //   payload: patches.map((patch: any, index: number) => ({
+      //     patch: patch,
+      //     inversePatch: inversePatches[index],
+      //   })),
+      // });
     },
     store.dispatch,
   ];

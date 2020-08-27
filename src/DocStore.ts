@@ -8,9 +8,9 @@ import {
   applyMiddleware,
   compose,
 } from 'redux';
-import { createWatchMiddleware } from './watchMiddleware';
+import { createInterceptMiddleware } from './interceptMiddleware';
+import { createObserveMiddleware } from './observeMiddleware';
 import get from 'lodash.get';
-import setDoc from './storeMethods/setDoc';
 import useDoc from './storeMethods/useDoc';
 
 type ReduxStore = Store<
@@ -21,10 +21,11 @@ type ReduxStore = Store<
 >;
 
 export default class DocStore {
-  store: ReduxStore;
+  reduxStore: ReduxStore;
   dispatch: Dispatch<any>;
   subscribe: (listener: () => void) => Unsubscribe;
-  watchCallbacks: any = [];
+  private observeCallbacks: any = [];
+  private interceptCallbacks: any = [];
 
   constructor(initialDoc: {}, docReducer: any, plugins?: Array<any>) {
     // const socket = socketIOClient('http://localhost:3001', {
@@ -58,31 +59,35 @@ export default class DocStore {
           })
         : compose;
 
-    let store: any;
+    let reduxStore: any;
     if (plugins) {
       // @ts-ignore
-      store = createStore(
+      reduxStore = createStore(
         rootReducer,
         initialState,
         composeEnhancers(
           applyMiddleware(
-            ...plugins.map(p => p.middleware),
-            createWatchMiddleware(this.watchCallbacks)
+            createInterceptMiddleware(this.interceptCallbacks),
+            createObserveMiddleware(this.observeCallbacks),
+            ...plugins.map(p => p.middleware)
           )
         )
       );
     } else {
-      store = createStore(
+      reduxStore = createStore(
         rootReducer,
         initialState,
         composeEnhancers(
-          applyMiddleware(createWatchMiddleware(this.watchCallbacks))
+          applyMiddleware(
+            createInterceptMiddleware(this.interceptCallbacks),
+            createObserveMiddleware(this.observeCallbacks)
+          )
         )
       );
     }
 
     // @ts-ignore
-    window['store'] = store;
+    window['store'] = reduxStore;
 
     // socket.on('patches', (patches: any) => {
     //   store.dispatch({
@@ -97,35 +102,48 @@ export default class DocStore {
     //   });
     // });
 
-    console.log(store.getState());
+    console.log(reduxStore.getState());
 
-    this.store = store;
-    this.dispatch = store.dispatch;
-    this.subscribe = store.subscribe;
+    this.reduxStore = reduxStore;
+    this.dispatch = reduxStore.dispatch;
+    this.subscribe = reduxStore.subscribe;
   }
   getState = () => {
-    return this.store.getState();
+    return this.reduxStore.getState();
   };
   getStateAtPath = (path: Array<string | number>) => {
-    const state = this.store.getState().doc.docState;
+    const state = this.reduxStore.getState().doc.docState;
     if (!path || path.length < 1) {
       return state;
     }
     return get(state, path.join('.'));
   };
-  onPatchPattern = (path: string, cb: any) => {
-    const unsubscribe = this.store.subscribe(cb);
-    return unsubscribe;
-  };
-  watchPath = (path: Array<string | number> = [], callback: any) => {
-    const newLength = this.watchCallbacks.push({ path, callback });
-    const watchIndex = newLength - 1;
+  observe = (
+    path: Array<string | number> = [],
+    callback: any,
+    depth: number = 1
+  ) => {
+    const newLength = this.observeCallbacks.push({ path, callback, depth });
+    const observerIndex = newLength - 1;
 
     return () => {
-      this.watchCallbacks.splice(watchIndex, 1);
+      this.observeCallbacks.splice(observerIndex, 1);
     };
   };
-  setDoc = (cb: any) => setDoc(this, cb);
 
-  useDoc = (path: Array<string | number> = []) => useDoc(this, path);
+  intercept = (
+    path: Array<string | number> = [],
+    callback: any,
+    depth: number = 1
+  ) => {
+    const newLength = this.interceptCallbacks.push({ path, callback, depth });
+    const interceptorIndex = newLength - 1;
+
+    return () => {
+      this.interceptCallbacks.splice(interceptorIndex, 1);
+    };
+  };
+
+  useDoc = (path: Array<string | number> = [], depth: number = 1) =>
+    useDoc(this, path, depth);
 }

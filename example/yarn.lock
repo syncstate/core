@@ -938,17 +938,17 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@syncstate/history@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.npmjs.org/@syncstate/history/-/history-0.1.2.tgz#f6e42a2edaed751f46a5d10f6c45bf7f0e48c231"
-  integrity sha512-nXpNHM62QpslNRVN28AV/ZnyPlUsyEWaE8Xjw1Nk0xx4RlMairE5/zl5YpNKmWySZL5UQw2pdGkVsLiOM1eqEA==
+"@syncstate/history@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.npmjs.org/@syncstate/history/-/history-0.1.3.tgz#2238788b253ca3a53422e11e9defaebef1a3e7c5"
+  integrity sha512-D6CRbJ5g8TLxlQshVqJlw9yPB5reGrO90gV9eFl4aVrrFiu2a+qG9JzO/3/UH3Rvzu6R5ou4So313T8D6Y8ohg==
   dependencies:
     immer "^7.0.7"
 
-"@syncstate/react@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.npmjs.org/@syncstate/react/-/react-0.1.3.tgz#9e0e2d378cebd7a59d685184dce6dbe8b0553868"
-  integrity sha512-xJYgGVlicqTMpCFz5k8+/KScmY4qLlCaBKxhUEeYl2LKmTW4utL83JZt6SYgXtYyMv4YlXx2ujTlGFldH1qZZQ==
+"@syncstate/react@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.npmjs.org/@syncstate/react/-/react-0.1.5.tgz#80425035137918415fe39d2bff622ebcf295a10e"
+  integrity sha512-Jf9qlHjpTGnYUpxgPv5aDPoBf6S6bRp0O8bfizvgyqzcPmb/t2Tup0FIGB0kYo0BkzZpzxC8H1FhNKspVGxrcw==
   dependencies:
     immer "^7.0.7"
 

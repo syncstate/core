@@ -22,7 +22,7 @@ export function TodoApp() {
   //   return <div>Loading...</div>;
   // }
 
-  // console.log('todos', todos);
+  // console.log('todo app render');
 
   const filteredTodos = todos
     .map((todoItem, index) => ({ todoItem, index }))
