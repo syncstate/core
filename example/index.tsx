@@ -9,22 +9,47 @@ import { Provider } from '@syncstate/react';
 
 const store = createDocStore({ todos: [], filter: 'all' }, [history.plugin]);
 
-store.setDoc(doc => {
-  doc.test = 'Awdwdwdd';
-});
 const [doc, setDoc] = store.useDoc();
 setDoc(doc => (doc.test = 'paihwdih'));
 const [test, setTest] = store.useDoc(['test']);
 setTest('kkkkkk');
 // undoable(() => true);
 
-const unwatch = store.watchPath(['todos'], ({ patch, inversePatch }) => {
-  console.log('patch generated at todos path');
-  console.log('patch, inversePatch', patch, inversePatch);
-});
+const disposeObs = store.observe(
+  ['todos'],
+  change => {
+    console.log('patch generated at todos path');
+    console.log('patch, inversePatch', change.patch, change.inversePatch);
+  },
+  1
+);
+
+const disposeInt = store.intercept(
+  ['todos'],
+  change => {
+    console.log('patch intercepted at todos path');
+    console.log('patch, inversePatch', change.patch, change.inversePatch);
+    if (
+      change.patch.path.join('/') === 'todos/0' &&
+      change.patch.op === 'add'
+    ) {
+      return {
+        ...change,
+        patch: {
+          ...change.patch,
+          value: { caption: 'Hello', completed: false },
+        },
+      };
+    }
+
+    return change;
+  },
+  1
+);
 
 setTimeout(() => {
-  unwatch();
+  disposeObs();
+  disposeInt();
 }, 10000);
 
 const App = () => {
