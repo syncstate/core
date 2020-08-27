@@ -1,11 +1,7 @@
 import { produceWithPatches } from 'immer';
 import DocStore from '../DocStore';
 
-export default function useDoc(
-  store: DocStore,
-  path: Array<string | number>,
-  depth: number
-) {
+export default function useDoc(store: DocStore, path: Array<string | number>) {
   let stateAtPath = store.getStateAtPath(path);
 
   return [

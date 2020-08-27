@@ -144,6 +144,5 @@ export default class DocStore {
     };
   };
 
-  useDoc = (path: Array<string | number> = [], depth: number = 1) =>
-    useDoc(this, path, depth);
+  useDoc = (path: Array<string | number> = []) => useDoc(this, path);
 }
