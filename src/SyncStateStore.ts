@@ -71,7 +71,7 @@ export default class SyncStateStore {
     if (plugins) {
       // @ts-ignore
       reduxStore = createStore(
-        topReducer,
+        rootReducer,
         initialState,
         composeEnhancers(
           applyMiddleware(
@@ -83,7 +83,7 @@ export default class SyncStateStore {
       );
     } else {
       reduxStore = createStore(
-        topReducer,
+        rootReducer,
         initialState,
         composeEnhancers(
           applyMiddleware(
