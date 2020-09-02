@@ -9,12 +9,14 @@
   },
   "dependencies": {
     "@syncstate/history": "^0.1.3",
-    "@syncstate/react": "^0.1.5",
-    "react-app-polyfill": "^1.0.0"
+    "@syncstate/react": "^0.1.8",
+    "react-app-polyfill": "^1.0.0",
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.8.4",
+    "@types/socket.io-client": "^1.4.33",
     "parcel": "^1.12.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

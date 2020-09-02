@@ -11,7 +11,8 @@ import {
 import { createInterceptMiddleware } from './interceptMiddleware';
 import { createObserveMiddleware } from './observeMiddleware';
 import get from 'lodash.get';
-import useDoc from './storeMethods/useDoc';
+import useSyncState from './storeMethods/useSyncState';
+import { SyncStatePath } from './index';
 
 type ReduxStore = Store<
   CombinedState<{
@@ -20,23 +21,23 @@ type ReduxStore = Store<
   any
 >;
 
-export default class DocStore {
+export default class SyncStateStore {
   reduxStore: ReduxStore;
   dispatch: Dispatch<any>;
   subscribe: (listener: () => void) => Unsubscribe;
   private observeCallbacks: any = [];
   private interceptCallbacks: any = [];
 
-  constructor(initialDoc: {}, docReducer: any, plugins?: Array<any>) {
-    // const socket = socketIOClient('http://localhost:3001', {
-    //   timeout: 100000,
-    // });
-
+  constructor(
+    initialDoc: {},
+    docReducer: any,
+    topReducer: any,
+    plugins?: Array<any>
+  ) {
     const initialState = {
       doc: {
-        docState: initialDoc,
-        docPatches: [],
-        loaded: false,
+        state: initialDoc,
+        patches: [],
       },
     };
 
@@ -47,7 +48,13 @@ export default class DocStore {
         reducers[p.reducer.name] = p.reducer.reducer;
       });
     }
-    const rootReducer = combineReducers(reducers);
+    const combinedReducer: any = combineReducers(reducers);
+
+    function rootReducer(state: any, action: any) {
+      const intermediateState = combinedReducer(state, action);
+      const finalState = topReducer(intermediateState, action);
+      return finalState;
+    }
     console.log(reducers, 'reducers');
 
     const composeEnhancers =
@@ -63,7 +70,7 @@ export default class DocStore {
     if (plugins) {
       // @ts-ignore
       reduxStore = createStore(
-        rootReducer,
+        topReducer,
         initialState,
         composeEnhancers(
           applyMiddleware(
@@ -75,7 +82,7 @@ export default class DocStore {
       );
     } else {
       reduxStore = createStore(
-        rootReducer,
+        topReducer,
         initialState,
         composeEnhancers(
           applyMiddleware(
@@ -108,22 +115,28 @@ export default class DocStore {
     this.dispatch = reduxStore.dispatch;
     this.subscribe = reduxStore.subscribe;
   }
-  getState = () => {
-    return this.reduxStore.getState();
+  getState = (subtree: string) => {
+    return this.reduxStore.getState()[subtree].state;
   };
-  getStateAtPath = (path: Array<string | number>) => {
-    const state = this.reduxStore.getState().doc.docState;
+  getStateAtPath = (subtree: string, path: SyncStatePath) => {
+    const state = this.reduxStore.getState()[subtree].state;
     if (!path || path.length < 1) {
       return state;
     }
     return get(state, path.join('.'));
   };
   observe = (
-    path: Array<string | number> = [],
+    subtree: string,
+    path: SyncStatePath = [],
     callback: any,
     depth: number = 1
   ) => {
-    const newLength = this.observeCallbacks.push({ path, callback, depth });
+    const newLength = this.observeCallbacks.push({
+      subtree,
+      path,
+      callback,
+      depth,
+    });
     const observerIndex = newLength - 1;
 
     return () => {
@@ -132,11 +145,17 @@ export default class DocStore {
   };
 
   intercept = (
-    path: Array<string | number> = [],
+    subtree: string,
+    path: SyncStatePath = [],
     callback: any,
     depth: number = 1
   ) => {
-    const newLength = this.interceptCallbacks.push({ path, callback, depth });
+    const newLength = this.interceptCallbacks.push({
+      subtree,
+      path,
+      callback,
+      depth,
+    });
     const interceptorIndex = newLength - 1;
 
     return () => {
@@ -144,5 +163,7 @@ export default class DocStore {
     };
   };
 
-  useDoc = (path: Array<string | number> = []) => useDoc(this, path);
+  useSyncState = (subtree: string, path: SyncStatePath = []) =>
+    useSyncState(this, subtree, path);
+  useDoc = (path: SyncStatePath = []) => useSyncState(this, 'doc', path);
 }

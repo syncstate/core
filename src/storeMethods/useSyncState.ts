@@ -1,8 +1,13 @@
 import { produceWithPatches } from 'immer';
-import DocStore from '../DocStore';
+import SyncStateStore from '../SyncStateStore';
+import { SyncStatePath } from '../index';
 
-export default function useDoc(store: DocStore, path: Array<string | number>) {
-  let stateAtPath = store.getStateAtPath(path);
+export default function useSyncState(
+  store: SyncStateStore,
+  subtree: string,
+  path: SyncStatePath
+) {
+  let stateAtPath = store.getStateAtPath(subtree, path);
 
   return [
     stateAtPath,
@@ -23,7 +28,7 @@ export default function useDoc(store: DocStore, path: Array<string | number>) {
         // replace the received value in its parent
         // let parentPath = [...path];
         const childKey = path.pop();
-        stateAtPath = store.getStateAtPath(path);
+        stateAtPath = store.getStateAtPath(subtree, path);
         produceCallback = (draft: any) => {
           if (childKey) {
             draft[childKey] = callbackOrData;
@@ -52,7 +57,7 @@ export default function useDoc(store: DocStore, path: Array<string | number>) {
       patches.forEach((patch: any, index: number) => {
         store.dispatch({
           type: 'PATCH',
-          payload: { patch, inversePatch: inversePatches[index] },
+          payload: { patch, inversePatch: inversePatches[index], subtree },
         });
       });
 

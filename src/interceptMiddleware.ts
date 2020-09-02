@@ -1,10 +1,20 @@
+import { produce } from 'immer';
+
 export const createInterceptMiddleware = (interceptCallbacks: any) => {
   return (store: any) => (next: any) => (action: any) => {
     let discardAction = false;
 
     if (action.type === 'PATCH') {
       interceptCallbacks.forEach((interceptor: any) => {
+        if (discardAction) {
+          return;
+        }
         const payloadPath = action.payload.patch.path;
+
+        if (interceptor.subtree !== action.payload.subtree) {
+          // Skip this interceptor if interceptor and action.payload subtrees do not match
+          return;
+        }
 
         // If path above the interceptor path changes call interceptor for all cases
         if (interceptor.path.join('/').startsWith(payloadPath.join('/'))) {
@@ -39,7 +49,7 @@ export const createInterceptMiddleware = (interceptCallbacks: any) => {
     }
 
     if (!discardAction) {
-      next(action);
+      return next(action);
     }
   };
 };

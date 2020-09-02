@@ -1,10 +1,15 @@
 export const createObserveMiddleware = (observeCallbacks: any) => {
   return (store: any) => (next: any) => (action: any) => {
-    next(action);
+    const result = next(action);
 
     if (action.type === 'PATCH') {
       observeCallbacks.forEach((observer: any) => {
         const payloadPath = action.payload.patch.path;
+
+        if (observer.subtree !== action.payload.subtree) {
+          // Skip this observer if observer and action.payload subtrees do not match
+          return;
+        }
 
         // If path above the observer path changes call observer for all cases
         if (observer.path.join('/').startsWith(payloadPath.join('/'))) {
@@ -36,5 +41,7 @@ export const createObserveMiddleware = (observeCallbacks: any) => {
         }
       });
     }
+
+    return result;
   };
 };

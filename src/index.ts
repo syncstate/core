@@ -1,50 +1,77 @@
-import { applyPatches, produceWithPatches, enablePatches } from 'immer';
+import {
+  produce,
+  applyPatches,
+  produceWithPatches,
+  enablePatches,
+} from 'immer';
 
-import DocStore from './DocStore';
+import SyncStateStore from './SyncStateStore';
 enablePatches();
 
 function docReducer(
   state: {
-    docState: any;
-    docPatches: [];
-    loaded: boolean;
+    state: any;
+    patches: [];
   } = {
-    docState: {},
-    docPatches: [],
-    loaded: false,
+    state: {},
+    patches: [],
   },
   action: any
 ) {
   switch (action.type) {
-    case 'PATCH':
-      return {
-        ...state,
-        docState: applyPatches(
-          state.docState,
-          // action payload contains a single patch
-          [action.payload.patch]
-        ),
-        docPatches: [
-          ...state.docPatches,
-          {
-            patch: action.payload.patch,
-            inversePatch: action.payload.inversePatch,
-          },
-        ],
-      };
+    // case 'PATCH':
+    //   return state;
+    //   return {
+    //     ...state,
+    //     state: applyPatches(
+    //       state.state,
+    //       // action payload contains a single patch
+    //       [action.payload.patch]
+    //     ),
+    //     patches: [
+    //       ...state.patches,
+    //       {
+    //         patch: action.payload.patch,
+    //         inversePatch: action.payload.inversePatch,
+    //       },
+    //     ],
+    //   };
 
-    case 'SET_LOADED':
-      return {
-        ...state,
-        loaded: action.payload,
-      };
     default:
       return state;
   }
 }
 
-export function createDocStore(initialDoc: {}, plugins?: Array<any>) {
-  const docStore = new DocStore(initialDoc, docReducer, plugins);
+function topReducer(state: any, action: any) {
+  switch (action.type) {
+    case 'PATCH': {
+      return produce(state, (draftState: any) => {
+        draftState[action.payload.subtree].state = applyPatches(
+          draftState[action.payload.subtree].state,
+          [action.payload.patch]
+        );
+        draftState[action.payload.subtree].patches.push({
+          patch: action.payload.patch,
+          inversePatch: action.payload.inversePatch,
+        });
+      });
+    }
+
+    default:
+      return state;
+  }
+}
+
+export function createStore(initialDoc: {}, plugins?: Array<any>) {
+  const docStore = new SyncStateStore(
+    initialDoc,
+    docReducer,
+    topReducer,
+    plugins
+  );
 
   return docStore;
 }
+
+export type SyncStatePath = Array<string | number>;
+export { SyncStateStore };

@@ -49,6 +49,8 @@ export function TodoApp() {
         completed: false,
       });
     });
+
+    setInput('');
   };
   const modifyFilter = filter => {
     setState(state => {
@@ -106,19 +108,19 @@ export function TodoApp() {
           ))}
         </ul>
       </div>
-      <input
-        type="text"
-        value={input}
-        onChange={e => setInput(e.target.value)}
-      />
-      <button
-        type="button"
-        onClick={() => {
+      <form
+        onSubmit={e => {
+          e.preventDefault();
           addTodo(input);
         }}
       >
-        Add Todo
-      </button>
+        <input
+          type="text"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+        />
+        <button type="submit">Add Todo</button>
+      </form>
       <div>
         <button
           onClick={() => {
