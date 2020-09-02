@@ -32,7 +32,7 @@ export default class SyncStateStore {
     initialDoc: {},
     docReducer: any,
     topReducer: any,
-    plugins?: Array<any>
+    pluginCreators: Array<any> = []
   ) {
     const initialState = {
       doc: {
@@ -41,13 +41,14 @@ export default class SyncStateStore {
       },
     };
 
+    const plugins = pluginCreators.map(pluginCreator => pluginCreator(this));
+
     const reducers: any = { doc: docReducer };
 
-    if (plugins) {
-      plugins.forEach(p => {
-        reducers[p.reducer.name] = p.reducer.reducer;
-      });
-    }
+    plugins.forEach(p => {
+      reducers[p.reducer.name] = p.reducer.reducer;
+    });
+
     const combinedReducer: any = combineReducers(reducers);
 
     function rootReducer(state: any, action: any) {
