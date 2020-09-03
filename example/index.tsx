@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { createStore } from '../src';
+import { createDocStore } from '../src';
 import { useState } from 'react';
 import { TodoApp } from './Todo';
 import { applyMiddleware } from 'redux';
@@ -8,12 +8,14 @@ import history from '@syncstate/history';
 import { Provider, useDoc } from '@syncstate/react';
 import * as remote from '../src/remote';
 // @ts-ignore
-// import socketIOClient from 'socket.io-client';
+import socketIOClient from 'socket.io-client';
 
 // const remote = createRemote()
 
-const store = createStore({ todos: [], filter: 'all' }, [
-  // history.plugin,
+const store = createDocStore({ todos: [], filter: 'all' }, [
+  // history.createInitializer(),
+  // remote.createInitializer(),
+  history.createPlugin({ name: 'history' }),
   // remote.plugin,
 ]);
 
@@ -37,6 +39,7 @@ const store = createStore({ todos: [], filter: 'all' }, [
 // });
 
 // store.intercept(
+//   'doc',
 //   ['todos'],
 //   change => {
 //     if (!change.origin) {
@@ -49,9 +52,9 @@ const store = createStore({ todos: [], filter: 'all' }, [
 //   Infinity
 // );
 
-remote.onLoadStart(store, ['todos'], () => {
-  console.log('started loading todos');
-});
+// remote.onLoadStart(store, ['todos'], () => {
+//   console.log('started loading todos');
+// });
 
 // const [loading, setLoading] = useRootDoc(["remote", "todos/0", "loading"])
 
@@ -63,9 +66,9 @@ remote.onLoadStart(store, ['todos'], () => {
 
 // })
 
-remote.onLoadEnd(store, ['todos'], () => {
-  console.log('ended loading todos');
-});
+// remote.onLoadEnd(store, ['todos'], () => {
+//   console.log('ended loading todos');
+// });
 
 const [doc, setDoc] = store.useSyncState('doc');
 setDoc(doc => (doc.test = 'paihwdih'));
