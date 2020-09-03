@@ -21,19 +21,22 @@ type ReduxStore = Store<
   any
 >;
 
-export default class SyncStateStore {
+export default class DocStore {
   reduxStore: ReduxStore;
   dispatch: Dispatch<any>;
   subscribe: (listener: () => void) => Unsubscribe;
+  plugins: Array<any>;
   private observeCallbacks: any = [];
   private interceptCallbacks: any = [];
 
   constructor(
     initialDoc: {},
-    docReducer: any,
     topReducer: any,
     pluginCreators: Array<any> = []
   ) {
+    // @ts-ignore
+    window['store'] = this;
+
     const initialState = {
       doc: {
         state: initialDoc,
@@ -41,22 +44,39 @@ export default class SyncStateStore {
       },
     };
 
-    const plugins = pluginCreators.map(pluginCreator => pluginCreator(this));
+    const pluginNames: Array<string> = [];
+    this.plugins = pluginCreators.map(pluginCreator => {
+      const plugin = pluginCreator(this);
+      if (pluginNames.find(pName => pName === plugin.name)) {
+        throw new Error(`SyncState plugin named ${plugin.name} already exists! You can override plugin name 
+by passing name in plugin configuration to createPlugin. 
+        createStore({}, [
+          myPlugin.createPlugin({
+            name: "myOtherPlugin"
+          })
+        ])`);
+      }
 
-    const reducers: any = { doc: docReducer };
-
-    plugins.forEach(p => {
-      reducers[p.reducer.name] = p.reducer.reducer;
+      pluginNames.push(plugin.name);
+      return plugin;
     });
 
-    const combinedReducer: any = combineReducers(reducers);
+    // const reducers: any = {};
 
-    function rootReducer(state: any, action: any) {
-      const intermediateState = combinedReducer(state, action);
-      const finalState = topReducer(intermediateState, action);
-      return finalState;
-    }
-    console.log(reducers, 'reducers');
+    // this.plugins.forEach(p => {
+    //   if (p.reducer) {
+    //     reducers[p.reducer.name] = p.reducer.reducer;
+    //   }
+    // });
+
+    // const combinedReducer: any = combineReducers(reducers);
+
+    // function rootReducer(state: any, action: any) {
+    //   const intermediateState = combinedReducer(state, action);
+    //   const finalState = topReducer(intermediateState, action);
+    //   return finalState;
+    // }
+    // console.log(reducers, 'reducers');
 
     const composeEnhancers =
       typeof window === 'object' &&
@@ -68,59 +88,52 @@ export default class SyncStateStore {
         : compose;
 
     let reduxStore: any;
-    if (plugins) {
-      // @ts-ignore
-      reduxStore = createStore(
-        rootReducer,
-        initialState,
-        composeEnhancers(
-          applyMiddleware(
-            createInterceptMiddleware(this.interceptCallbacks),
-            createObserveMiddleware(this.observeCallbacks),
-            ...plugins.map(p => p.middleware)
-          )
-        )
-      );
-    } else {
-      reduxStore = createStore(
-        rootReducer,
-        initialState,
-        composeEnhancers(
-          applyMiddleware(
-            createInterceptMiddleware(this.interceptCallbacks),
-            createObserveMiddleware(this.observeCallbacks)
-          )
-        )
-      );
-    }
 
     // @ts-ignore
-    window['store'] = reduxStore;
-
-    // socket.on('patches', (patches: any) => {
-    //   store.dispatch({
-    //     type: 'PATCHES',
-    //     payload: patches,
-    //   });
-    // });
-    // socket.on('loaded', (patches: any) => {
-    //   store.dispatch({
-    //     type: 'SET_LOADED',
-    //     payload: true,
-    //   });
-    // });
+    reduxStore = createStore(
+      topReducer,
+      initialState,
+      composeEnhancers(
+        applyMiddleware(
+          createInterceptMiddleware(this.interceptCallbacks),
+          createObserveMiddleware(this.observeCallbacks),
+          ...this.plugins.map(p => p.middleware)
+        )
+      )
+    );
 
     console.log(reduxStore.getState());
 
     this.reduxStore = reduxStore;
     this.dispatch = reduxStore.dispatch;
     this.subscribe = reduxStore.subscribe;
+
+    this.plugins.forEach(plugin => {
+      this.reduxStore.dispatch({
+        type: 'CREATE_SUBTREE',
+        payload: {
+          subtree: plugin.name,
+          initialState: plugin.initialState,
+        },
+      });
+    });
   }
   getState = (subtree: string) => {
-    return this.reduxStore.getState()[subtree].state;
+    const subtreeState = this.reduxStore.getState()[subtree];
+    if (!subtreeState) {
+      console.warn(`Tried to access non-existent subtree ${subtree}`);
+      return undefined;
+    }
+    return subtreeState.state;
   };
   getStateAtPath = (subtree: string, path: SyncStatePath) => {
-    const state = this.reduxStore.getState()[subtree].state;
+    const subtreeState = this.reduxStore.getState()[subtree];
+    if (!subtreeState) {
+      console.warn(`Tried to access non-existent subtree ${subtree}`);
+      return undefined;
+    }
+
+    const state = subtreeState.state;
     if (!path || path.length < 1) {
       return state;
     }
