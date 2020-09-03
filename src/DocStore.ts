@@ -8,11 +8,13 @@ import {
   applyMiddleware,
   compose,
 } from 'redux';
-import { createInterceptMiddleware } from './interceptMiddleware';
-import { createObserveMiddleware } from './observeMiddleware';
+import { createInterceptMiddleware, Interceptor } from './interceptMiddleware';
+import { createObserveMiddleware, Observer } from './observeMiddleware';
 import get from 'lodash.get';
 import useSyncState from './storeMethods/useSyncState';
 import { SyncStatePath } from './index';
+import removeFirstElement from './utils/jsonPatchPathToImmerPath';
+import jsonPatchPathToImmerPath from './utils/jsonPatchPathToImmerPath';
 
 type ReduxStore = Store<
   CombinedState<{
@@ -26,8 +28,8 @@ export default class DocStore {
   dispatch: Dispatch<any>;
   subscribe: (listener: () => void) => Unsubscribe;
   plugins: Array<any>;
-  private observeCallbacks: any = [];
-  private interceptCallbacks: any = [];
+  private observers: Array<Observer> = [];
+  private interceptors: Array<Interceptor> = [];
 
   constructor(
     initialDoc: {},
@@ -95,8 +97,8 @@ by passing name in plugin configuration to createPlugin.
       initialState,
       composeEnhancers(
         applyMiddleware(
-          createInterceptMiddleware(this.interceptCallbacks),
-          createObserveMiddleware(this.observeCallbacks),
+          createInterceptMiddleware(this.interceptors),
+          createObserveMiddleware(this.observers),
           ...this.plugins.map(p => p.middleware)
         )
       )
@@ -126,7 +128,7 @@ by passing name in plugin configuration to createPlugin.
     }
     return subtreeState.state;
   };
-  getStateAtPath = (subtree: string, path: SyncStatePath) => {
+  getStateAtPath = (subtree: string, path: string) => {
     const subtreeState = this.reduxStore.getState()[subtree];
     if (!subtreeState) {
       console.warn(`Tried to access non-existent subtree ${subtree}`);
@@ -134,18 +136,18 @@ by passing name in plugin configuration to createPlugin.
     }
 
     const state = subtreeState.state;
-    if (!path || path.length < 1) {
+    if (!path) {
       return state;
     }
-    return get(state, path.join('.'));
+    return get(state, jsonPatchPathToImmerPath(path).join('.'));
   };
   observe = (
     subtree: string,
-    path: SyncStatePath = [],
+    path: string = '',
     callback: any,
     depth: number = 1
   ) => {
-    const newLength = this.observeCallbacks.push({
+    const newLength = this.observers.push({
       subtree,
       path,
       callback,
@@ -154,17 +156,17 @@ by passing name in plugin configuration to createPlugin.
     const observerIndex = newLength - 1;
 
     return () => {
-      this.observeCallbacks.splice(observerIndex, 1);
+      this.observers.splice(observerIndex, 1);
     };
   };
 
   intercept = (
     subtree: string,
-    path: SyncStatePath = [],
+    path: string = '',
     callback: any,
     depth: number = 1
   ) => {
-    const newLength = this.interceptCallbacks.push({
+    const newLength = this.interceptors.push({
       subtree,
       path,
       callback,
@@ -173,11 +175,11 @@ by passing name in plugin configuration to createPlugin.
     const interceptorIndex = newLength - 1;
 
     return () => {
-      this.interceptCallbacks.splice(interceptorIndex, 1);
+      this.interceptors.splice(interceptorIndex, 1);
     };
   };
 
-  useSyncState = (subtree: string, path: SyncStatePath = []) =>
+  useSyncState = (subtree: string, path: string = '') =>
     useSyncState(this, subtree, path);
-  useDoc = (path: SyncStatePath = []) => useSyncState(this, 'doc', path);
+  useDoc = (path: string = '') => useSyncState(this, 'doc', path);
 }

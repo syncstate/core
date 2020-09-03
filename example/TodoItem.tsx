@@ -33,9 +33,9 @@ export const TodoItem = React.memo(
         />
       </li>
     );
-  },
-  (prevProps, nextProps) => {
-    console.log('prevProps, nextProps', prevProps, nextProps);
-    return true;
   }
+  // (prevProps, nextProps) => {
+  //   console.log('prevProps, nextProps', prevProps, nextProps);
+  //   return true;
+  // }
 );

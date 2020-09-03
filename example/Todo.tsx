@@ -6,8 +6,8 @@ import { TodoItem } from './TodoItem';
 import { useState, useEffect } from 'react';
 
 export function TodoApp() {
-  const todoPath = ['todos'];
-  const filterPath = ['filter'];
+  const todoPath = '/todos';
+  const filterPath = '/filter';
 
   const [todos, setTodos, dispatch] = useDoc(todoPath);
   const [todoFilter] = useDoc(filterPath);
@@ -16,7 +16,7 @@ export function TodoApp() {
   const [input, setInput] = useState('');
 
   useEffect(() => {
-    dispatch(history.enable(['todos']));
+    dispatch(history.enable('/todos'));
   }, []);
   // if (!doc.getState().loaded) {
   //   return <div>Loading...</div>;
@@ -103,7 +103,7 @@ export function TodoApp() {
           {filteredTodos.map(todoItemWithIndex => (
             <TodoItem
               key={todoItemWithIndex.index} // should not be index ideally, use some kind of id
-              todoItemPath={[...todoPath, todoItemWithIndex.index]}
+              todoItemPath={todoPath + '/' + todoItemWithIndex.index}
             />
           ))}
         </ul>
@@ -124,28 +124,28 @@ export function TodoApp() {
       <div>
         <button
           onClick={() => {
-            dispatch(history.undoPath(['todos']));
+            dispatch(history.undoPath('/todos'));
           }}
         >
           Undo
         </button>
         <button
           onClick={() => {
-            dispatch(history.redoPath(['todos']));
+            dispatch(history.redoPath('/todos'));
           }}
         >
           Redo
         </button>
         <button
           onClick={() => {
-            dispatch(history.undoPathTillBreakpoint(['todos']));
+            dispatch(history.undoPathTillBreakpoint('/todos'));
           }}
         >
           Undo till breakpoint
         </button>
         <button
           onClick={() => {
-            dispatch(history.redoPathTillBreakpoint(['todos']));
+            dispatch(history.redoPathTillBreakpoint('/todos'));
           }}
         >
           Redo till breakpoint

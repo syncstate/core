@@ -6,15 +6,20 @@ import {
 } from 'immer';
 
 import DocStore from './DocStore';
+import jsonPatchPathToImmerPath from './utils/jsonPatchPathToImmerPath';
 enablePatches();
 
 function topReducer(state: any, action: any) {
   switch (action.type) {
     case 'PATCH': {
       return produce(state, (draftState: any) => {
+        const patch = {
+          ...action.payload.patch,
+          path: jsonPatchPathToImmerPath(action.payload.patch.path),
+        };
         draftState[action.payload.subtree].state = applyPatches(
           draftState[action.payload.subtree].state,
-          [action.payload.patch]
+          [patch]
         );
         draftState[action.payload.subtree].patches.push({
           patch: action.payload.patch,

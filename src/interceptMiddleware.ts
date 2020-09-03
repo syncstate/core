@@ -1,16 +1,23 @@
 import { produce } from 'immer';
 import get from 'lodash.get';
 
-export const createInterceptMiddleware = (interceptCallbacks: any) => {
+export type Interceptor = {
+  subtree: string;
+  path: string;
+  callback: any;
+  depth: number;
+};
+
+export const createInterceptMiddleware = (interceptors: Array<Interceptor>) => {
   return (store: any) => (next: any) => (action: any) => {
     let discardAction = false;
 
     if (action.type === 'PATCH') {
-      interceptCallbacks.forEach((interceptor: any) => {
+      interceptors.forEach(interceptor => {
         if (discardAction) {
           return;
         }
-        const payloadPath = action.payload.patch.path;
+        const payloadPath: string = action.payload.patch.path;
 
         if (interceptor.subtree !== action.payload.subtree) {
           // Skip this interceptor if interceptor and action.payload subtrees do not match
@@ -18,22 +25,21 @@ export const createInterceptMiddleware = (interceptCallbacks: any) => {
         }
 
         // If path above the interceptor path changes call interceptor for all cases
-        if (interceptor.path.join('/').startsWith(payloadPath.join('/'))) {
+        if (interceptor.path.startsWith(payloadPath)) {
           discardAction = callInterceptor(interceptor, store, action);
         }
 
         // If depth x, call for x levels extra below interceptor path
         else if (interceptor.depth > 0 && interceptor.depth !== Infinity) {
-          const matchingLengthPayloadPath = payloadPath.slice(
-            0,
-            interceptor.path.length
-          );
+          const matchingLengthPayloadPathArray = payloadPath
+            .split('/')
+            .slice(0, interceptor.path.split('/').length);
           const remainingPayloadPathLength =
-            payloadPath.length - matchingLengthPayloadPath.length;
+            payloadPath.split('/').length -
+            matchingLengthPayloadPathArray.length;
 
           if (
-            matchingLengthPayloadPath.join('/') ===
-              interceptor.path.join('/') &&
+            matchingLengthPayloadPathArray.join('/') === interceptor.path &&
             remainingPayloadPathLength <= interceptor.depth
           ) {
             discardAction = callInterceptor(interceptor, store, action);
@@ -42,7 +48,7 @@ export const createInterceptMiddleware = (interceptCallbacks: any) => {
 
         //If depth is infinity, call for any number of levels below interceptor path
         else if (interceptor.depth === Infinity) {
-          if (payloadPath.join('/').startsWith(interceptor.path.join('/'))) {
+          if (payloadPath.startsWith(interceptor.path)) {
             discardAction = callInterceptor(interceptor, store, action);
           }
         }
@@ -59,7 +65,7 @@ function callInterceptor(interceptor: any, store: any, action: any) {
   const newPayload = interceptor.callback(
     get(
       store.getState()[interceptor.subtree],
-      'state.' + interceptor.path.join('.')
+      'state' + interceptor.path.replaceAll('/', '.')
     ),
     action.payload
   );
