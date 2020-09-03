@@ -55,56 +55,52 @@ export function getLoading(store: SyncStateStore, path: SyncStatePath) {
   return remoteForPath ? remoteForPath.loading : false;
 }
 
-export const plugin: {
+export const plugin = (
+  store: SyncStateStore
+): {
   middleware: Middleware;
   reducer: { name: string; reducer: Reducer };
-} = {
-  middleware: store => next => action => {
-    const result = next(action);
+} => {
+  return {
+    middleware: reduxStore => next => action => {
+      const result = next(action);
+      const [remote, setRemote] = store.useSyncState('remote', ['paths']);
 
-    switch (action.type) {
-      case 'SET_LOADING_REMOTE':
-        {
-          const stringPath = action.payload.path.join('/');
-          if (action.payload.value) {
-            const callbacks = loadStartCallbacks[stringPath];
+      // switch (action.type) {
+      //   case "ENABLE_REMOTE": {
+      //     setRemote(remote => {
+      //       id
+      //     })
+      //     action.payload.forEach((path: SyncStatePath) => {
+      //       const stringPath = path.join('/');
 
-            if (callbacks) {
-              callbacks.forEach((cb: any) => {
-                cb();
-              });
-            }
-          } else {
-            const callbacks = loadEndCallbacks[stringPath];
+      //       if (!draftState.paths[stringPath]) {
+      //         draftState.paths[stringPath] = {
+      //           loading: false,
+      //           tempPatches: [],
+      //         };
+      //       }
+      //     });
+      //   }
+      //   case 'APPLY_REMOTE':
+      //     {
+      //       store.dispatch({
+      //         type: 'PATCH',
+      //         payload: { ...action.payload.change, patchType: 'NO_RECORD', subtree: "doc" },
+      //       });
+      //     }
 
-            if (callbacks) {
-              callbacks.forEach((cb: any) => {
-                cb();
-              });
-            }
-          }
-        }
-        break;
-      case 'APPLY_REMOTE':
-        {
-          const stringPath = action.payload.path.join('/');
+      //     break;
+      //   default:
+      // }
 
-          store.dispatch({
-            type: 'PATCH',
-            payload: { ...action.payload.change, patchType: 'NO_RECORD' },
-          });
-        }
-
-        break;
-      default:
-    }
-
-    return result;
-  },
-  reducer: {
-    name: 'remote',
-    reducer: remoteReducer,
-  },
+      return result;
+    },
+    reducer: {
+      name: 'remote',
+      reducer: remoteReducer,
+    },
+  };
 };
 
 export function remoteReducer(
