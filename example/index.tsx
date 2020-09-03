@@ -23,6 +23,14 @@ const socket = socketIOClient('http://localhost:3001', {
   timeout: 100000,
 });
 
+store.observe('remote', ['paths', 'todos', 'loading'], (loading, change) => {
+  console.log('store.observe: remote status changed: ', loading);
+});
+
+remote.observeStatus(store, ['todos'], loading => {
+  console.log('remote.observeStatus: remote status changed: ', loading);
+});
+
 socket.emit('fetchDoc', ['todos']);
 store.dispatch(remote.setLoading(['todos'], true));
 console.log('Wewdwd', remote.getLoading(store, ['todos']));
@@ -49,10 +57,6 @@ store.intercept(
   },
   Infinity
 );
-
-store.observe('remote', ['paths', 'todos', 'loading'], (loading, change) => {
-  console.log(change, 'change loading', loading);
-});
 
 // remote.onLoadStart(store, ['todos'], () => {
 //   console.log('started loading todos');
