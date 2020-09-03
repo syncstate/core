@@ -8,12 +8,6 @@ export const createObserveMiddleware = (observeCallbacks: any) => {
       observeCallbacks.forEach((observer: any) => {
         const payloadPath = action.payload.patch.path;
 
-        console.log(
-          store.getState()[observer.subtree],
-          observer.path.join('.'),
-          '&&**'
-        );
-
         if (observer.subtree !== action.payload.subtree) {
           // Skip this observer if observer and action.payload subtrees do not match
           return;
