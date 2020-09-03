@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+import get from 'lodash.get';
 
 export const createInterceptMiddleware = (interceptCallbacks: any) => {
   return (store: any) => (next: any) => (action: any) => {
@@ -18,7 +19,7 @@ export const createInterceptMiddleware = (interceptCallbacks: any) => {
 
         // If path above the interceptor path changes call interceptor for all cases
         if (interceptor.path.join('/').startsWith(payloadPath.join('/'))) {
-          discardAction = intercept(interceptor, action);
+          discardAction = callInterceptor(interceptor, store, action);
         }
 
         // If depth x, call for x levels extra below interceptor path
@@ -35,14 +36,14 @@ export const createInterceptMiddleware = (interceptCallbacks: any) => {
               interceptor.path.join('/') &&
             remainingPayloadPathLength <= interceptor.depth
           ) {
-            discardAction = intercept(interceptor, action);
+            discardAction = callInterceptor(interceptor, store, action);
           }
         }
 
         //If depth is infinity, call for any number of levels below interceptor path
         else if (interceptor.depth === Infinity) {
           if (payloadPath.join('/').startsWith(interceptor.path.join('/'))) {
-            discardAction = intercept(interceptor, action);
+            discardAction = callInterceptor(interceptor, store, action);
           }
         }
       });
@@ -54,8 +55,14 @@ export const createInterceptMiddleware = (interceptCallbacks: any) => {
   };
 };
 
-function intercept(interceptor: any, action: any) {
-  const newPayload = interceptor.callback(action.payload);
+function callInterceptor(interceptor: any, store: any, action: any) {
+  const newPayload = interceptor.callback(
+    get(
+      store.getState()[interceptor.subtree],
+      'state.' + interceptor.path.join('.')
+    ),
+    action.payload
+  );
   action.payload = newPayload;
 
   if (newPayload === null) {

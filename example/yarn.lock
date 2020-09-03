@@ -938,10 +938,10 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@syncstate/history@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.npmjs.org/@syncstate/history/-/history-0.2.3.tgz#c3ca847faea607f614d885bdb1d0834f230925c5"
-  integrity sha512-0bjEW3zXQd1FEGiAS3cTuhQ+5ox50TamWdm3pnCxylYdb9tbK+VZXacZ7379Pf0jSiia9olstzW3zogfo2nzUQ==
+"@syncstate/history@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.npmjs.org/@syncstate/history/-/history-0.2.4.tgz#253543a1901a1b1ab4cf86bff8c089938da79ddd"
+  integrity sha512-kElar4OBkyyxKOlI8zIzfBIjUuTAjE2KHyKO0gGZ7yPSgZn4vsOdY+/cUHOeM43O036Bv6AXDo2+h/VGVIuH0g==
 
 "@syncstate/react@^0.1.8":
   version "0.1.8"
