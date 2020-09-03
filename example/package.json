@@ -8,7 +8,7 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "@syncstate/history": "^0.2.3",
+    "@syncstate/history": "^0.2.4",
     "@syncstate/react": "^0.1.8",
     "react-app-polyfill": "^1.0.0",
     "socket.io-client": "^2.3.0"

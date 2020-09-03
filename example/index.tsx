@@ -10,47 +10,49 @@ import * as remote from '../src/remote';
 // @ts-ignore
 import socketIOClient from 'socket.io-client';
 
-// const remote = createRemote()
-
 const store = createDocStore({ todos: [], filter: 'all' }, [
-  // history.createInitializer(),
+  history.createInitializer(),
   // remote.createInitializer(),
-  history.createPlugin({ name: 'history' }),
-  // remote.plugin,
+  // history.createPlugin({ name: 'history' }),
+  remote.createInitializer(),
 ]);
 
-// store.dispatch(remote.enableRemote(['todos']));
+store.dispatch(remote.enableRemote(['todos']));
 
-// const socket = socketIOClient('http://localhost:3001', {
-//   timeout: 100000,
-// });
+const socket = socketIOClient('http://localhost:3001', {
+  timeout: 100000,
+});
 
-// socket.emit('fetchDoc', ['todos']);
-// store.dispatch(remote.setLoading(['todos'], true));
-// console.log('Wewdwd', remote.getLoading(store, ['todos']));
+socket.emit('fetchDoc', ['todos']);
+store.dispatch(remote.setLoading(['todos'], true));
+console.log('Wewdwd', remote.getLoading(store, ['todos']));
 
-// socket.on('loaded', path => {
-//   store.dispatch(remote.setLoading(path, false));
-//   console.log('Wewdwd', remote.getLoading(store, path));
-// });
+socket.on('loaded', path => {
+  store.dispatch(remote.setLoading(path, false));
+  console.log('Wewdwd', remote.getLoading(store, path));
+});
 
-// socket.on('change', (path, patch) => {
-//   store.dispatch(remote.applyRemote(path, patch));
-// });
+socket.on('change', (path, patch) => {
+  store.dispatch(remote.applyRemote(path, patch));
+});
 
-// store.intercept(
-//   'doc',
-//   ['todos'],
-//   change => {
-//     if (!change.origin) {
-//       // Don't emit for patches received from server
-//       socket.emit('change', ['todos'], change);
-//     }
-//     return change;
-//     // return null;
-//   },
-//   Infinity
-// );
+store.intercept(
+  'doc',
+  ['todos'],
+  (todos, change) => {
+    if (!change.origin) {
+      // Don't emit for patches received from server
+      socket.emit('change', ['todos'], change);
+    }
+    return change;
+    // return null;
+  },
+  Infinity
+);
+
+store.observe('remote', ['paths', 'todos', 'loading'], (loading, change) => {
+  console.log(change, 'change loading', loading);
+});
 
 // remote.onLoadStart(store, ['todos'], () => {
 //   console.log('started loading todos');
@@ -79,7 +81,7 @@ setTest('kkkkkk');
 const disposeObs = store.observe(
   'doc',
   ['todos'],
-  change => {
+  (todos, change) => {
     console.log('patch generated at todos path');
     console.log('patch, inversePatch', change.patch, change.inversePatch);
   },
@@ -89,7 +91,7 @@ const disposeObs = store.observe(
 const disposeInt = store.intercept(
   'doc',
   ['todos'],
-  change => {
+  (todos, change) => {
     console.log('patch intercepted at todos path');
     console.log('patch, inversePatch', change.patch, change.inversePatch);
     if (

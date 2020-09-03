@@ -16,7 +16,7 @@ export function TodoApp() {
   const [input, setInput] = useState('');
 
   useEffect(() => {
-    dispatch(history.watchPath(['todos']));
+    dispatch(history.enable(['todos']));
   }, []);
   // if (!doc.getState().loaded) {
   //   return <div>Loading...</div>;
