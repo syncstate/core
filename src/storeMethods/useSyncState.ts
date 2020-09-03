@@ -1,9 +1,9 @@
 import { produceWithPatches } from 'immer';
-import SyncStateStore from '../SyncStateStore';
+import DocStore from '../DocStore';
 import { SyncStatePath } from '../index';
 
 export default function useSyncState(
-  store: SyncStateStore,
+  store: DocStore,
   subtree: string,
   path: SyncStatePath
 ) {
