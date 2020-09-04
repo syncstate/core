@@ -10,22 +10,6 @@ Before opening an issue, please search the [issue tracker](https://github.com/sy
 
 We use the issue tracker to keep track of bugs and improvements to SyncState itself, its examples, and the documentation. We encourage you to open issues to discuss improvements, architecture, theory, internal implementation, etc. If a topic has been discussed before, we will ask you to join the previous discussion.
 
-As SyncState is stable software, changes to its behavior are very carefully considered. Any pull requests that involve breaking changes should be made against the `next` branch.
-
-### Getting Help
-
-As SyncState is very new to the community, we understand that solution to your question can not be found easily. But we would strongly suggest to go through the Documentation and FAQ's , if you still have the query please add your questions on **StackOverflow**. As SyncState will mature we are sure you can easily find answers to your questions.
-
-Some questions may take longer than expected to get answered, in that case we would encourage you to post an issue linking to your question. We will close your issue but this will give people watching the repo an opportunity to see your question and reply to it on StackOverflow if they know the answer.
-
-Please be considerate when doing this as this is not the primary purpose of the issue tracker.
-
-### Help Us Help You
-
-On both websites, it is a good idea to structure your code and question in a way that is easy to read to entice people to answer it. For example, we encourage you to use syntax highlighting, indentation, and split text in paragraphs.
-
-Please keep in mind that people spend their free time trying to help you. You can make it easier for them if you provide versions of the relevant libraries and a runnable small project reproducing your issue. You can put your code on [JSBin](http://jsbin.com) or, for bigger projects, on GitHub. Make sure all the necessary dependencies are declared in `package.json` so anyone can run `yarn install && yarn start` and reproduce your issue.
-
 ## Development
 
 Visit the [issue tracker](https://github.com/syncstate/core/issues) to find a list of open issues that need attention.
@@ -41,7 +25,7 @@ git clone https://github.com/syncstate/core.git
 #### Building SyncState
 
 ```sh
-yarn run build
+yarn build
 ```
 
 ### Testing and Linting
@@ -49,13 +33,13 @@ yarn run build
 To only run linting:
 
 ```sh
-npm run lint
+yarn lint
 ```
 
 To only run tests:
 
 ```sh
-npm run test
+yarn test
 ```
 
 ### Docs
