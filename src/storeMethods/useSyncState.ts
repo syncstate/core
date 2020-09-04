@@ -14,6 +14,8 @@ export default function useSyncState(
   return [
     stateAtPath,
     (callbackOrData: any) => {
+      // Do NOT use above stateAtPath, if you do, you get stale value in the closure if you are reusing this setter callback
+      let stateAtPath = store.getStateAtPath(subtree, path);
       let replaceValue = false;
       if (typeof callbackOrData !== 'function') {
         // throw new Error(
