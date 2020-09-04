@@ -1,4 +1,4 @@
-# <img  src="https://github.com/syncstate/syncstate.github.io/blob/fix/docs/img/SyncStateReadmeLogo.svg" alt="SyncState Logo"> SyncState
+# <img  src="https://raw.githubusercontent.com/syncstate/syncstate.github.io/0fbcf985c1ffa3d9400664bdbf3f0f98031b6546/img/SyncStateReadmeLogo.svg" alt="SyncState Logo"> SyncState
 
 SyncState is a **document-based state management library** for JS apps that can power realtime multi-user, offline-first, undoable states across systems.
 
