@@ -29,7 +29,9 @@ Find Complete **Documentation** [here](https://syncstate.github.io/docs/getting-
 
 ## Examples
 
-[Some Examples for you to get started with SyncState](https://syncstate.github.io/docs/counter-example)
+- [Counter Example](https://syncstate.github.io/docs/counter-example)
+- [Counter With Redo/Undo](https://syncstate.github.io/docs/counter-with-redo-undo-example)
+- [Todo App](https://syncstate.github.io/docs/todo-app-example)
 
 ## Contributing
 
@@ -117,9 +119,9 @@ function App() {
 Built with ❤️ &nbsp; at GeekyAnts.
 
 ## Authors : 
-- Sanket Sahu
-- Himanshu Satija
-- Rohit Singh
+- Sanket Sahu ([@sanketsahu](https://twitter.com/sanketsahu))
+- Himanshu Satija ([@HimanshuSatija_](https://twitter.com/HimanshuSatija_))
+- Rohit Singh ([@rohitistweet](https://twitter.com/rohitistweet))
 
 ## License
 Licensed under the MIT License, Copyright © 2020 SyncState.
