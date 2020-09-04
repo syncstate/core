@@ -10,17 +10,13 @@ export function TodoApp() {
   const filterPath = '/filter';
 
   const [todos, setTodos, dispatch] = useDoc(todoPath);
-  const [todoFilter] = useDoc(filterPath);
-  const [state, setState] = useDoc();
+  const [todoFilter, setTodoFilter] = useDoc(filterPath);
 
   const [input, setInput] = useState('');
 
   useEffect(() => {
     dispatch(history.enable('/todos'));
   }, []);
-  // if (!doc.getState().loaded) {
-  //   return <div>Loading...</div>;
-  // }
 
   // console.log('todo app render');
 
@@ -53,9 +49,7 @@ export function TodoApp() {
     setInput('');
   };
   const modifyFilter = filter => {
-    setState(state => {
-      state.filter = filter;
-    });
+    setTodoFilter(filter);
   };
 
   return (
@@ -69,6 +63,7 @@ export function TodoApp() {
             id="filter1"
             name="filter"
             value="all"
+            checked={todoFilter === 'all'}
             onChange={e => {
               modifyFilter(e.target.value);
             }}
@@ -80,6 +75,7 @@ export function TodoApp() {
             id="filter2"
             name="filter"
             value="completed"
+            checked={todoFilter === 'completed'}
             onChange={e => {
               modifyFilter(e.target.value);
             }}
@@ -91,6 +87,7 @@ export function TodoApp() {
             id="filter3"
             name="filter"
             value="incomplete"
+            checked={todoFilter === 'incomplete'}
             onChange={e => {
               modifyFilter(e.target.value);
             }}

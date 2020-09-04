@@ -8,7 +8,7 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "@syncstate/history": "^0.3.0",
+    "@syncstate/history": "^0.3.1",
     "@syncstate/react": "^0.2.0",
     "@syncstate/remote-client": "^0.1.2",
     "react-app-polyfill": "^1.0.0",
