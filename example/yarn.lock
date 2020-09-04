@@ -938,10 +938,10 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@syncstate/history@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/@syncstate/history/-/history-0.2.4.tgz#253543a1901a1b1ab4cf86bff8c089938da79ddd"
-  integrity sha512-kElar4OBkyyxKOlI8zIzfBIjUuTAjE2KHyKO0gGZ7yPSgZn4vsOdY+/cUHOeM43O036Bv6AXDo2+h/VGVIuH0g==
+"@syncstate/history@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.npmjs.org/@syncstate/history/-/history-0.3.0.tgz#8f8262c67bb180cbfc2d51d1eb79494499312822"
+  integrity sha512-OASbt97K3kSnvSdnFKN9MJ0c5eqsdb6Fia5MHppN437KcgpP380WKV1w1gM1XKuwNxGqUabKse1KlrsS87MFpw==
 
 "@syncstate/react@^0.2.0":
   version "0.2.0"
@@ -949,6 +949,11 @@
   integrity sha512-2kiGdibsaNIbJ+yia8Cswp6m4cB6GN/o1SrqRRC79kiPjE96H7Lazc81hm17Jgq9rgsqBSZ7DNc9SAdLKL1amg==
   dependencies:
     immer "^7.0.7"
+
+"@syncstate/remote-client@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.npmjs.org/@syncstate/remote-client/-/remote-client-0.1.2.tgz#c214d4be5b6f6ef215ff785275e4b5eea0318b56"
+  integrity sha512-WKJLV2909gHqFbxQt8mcuCwHwMukLOI0ocZeo9FO1hVXdPIrWLkY9FxVcxHwt6fm+PJUonCYIo6lQsf334fkpA==
 
 "@types/prop-types@*":
   version "15.7.3"
