@@ -114,6 +114,6 @@ function App() {
 
 ## Checkout Sanket launching SyncState at [React Native EU 2020](https://youtu.be/IWkQxg6RQ-A)
 
-<span>Built with ❤️</span><span style="padding-left:2px">at GeekyAnts.</span>
+Built with ❤️ &nbsp; at GeekyAnts.
 
 **Author:** Sanket Sahu, Himanshu Satija & Rohit Singh
