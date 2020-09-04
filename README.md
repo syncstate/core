@@ -23,17 +23,17 @@ A plugin that stores the changes as JSON patches (instead of a series of app sna
 
 **The remote plugin helps** achieve multiuser functionality. It comes with a bit of server piece that works for conflict resolution.
 
-### Documentation
+## Documentation
 
-Find Complete **Documentation** and much more [here](https://syncstate.github.io/docs/getting-started)
+Find Complete **Documentation** [here](https://syncstate.github.io/docs/getting-started)
 
-### Examples
+## Examples
 
 [Some Examples for you to get started with SyncState](https://syncstate.github.io/docs/counter-example)
 
-### Contributors
+## Contributing
 
-Have something to add? We are lucky to have you, head over to [Contribution Guidelines](https://github.com/syncstate/syncstate/blob/master/CONTRIBUTING.md) and learn how you can be a part of a wonderful community of SyncState.
+Have something to add? We are lucky to have you, head over to [Contribution Guidelines](https://github.com/syncstate/syncstate/blob/master/CONTRIBUTING.md) and learn how you can be a part of a wonderful growing community of SyncState.
 
 ## Installation
 
