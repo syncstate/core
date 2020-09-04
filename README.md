@@ -116,4 +116,11 @@ function App() {
 
 Built with ❤️ &nbsp; at GeekyAnts.
 
-**Author:** Sanket Sahu, Himanshu Satija & Rohit Singh
+## Authors : 
+- Sanket Sahu
+- Himanshu Satija
+- Rohit Singh
+
+## License
+Licensed under the MIT License, Copyright © 2020 SyncState.
+See [LICENSE](https://github.com/syncstate/core/blob/master/LICENSE) for more information.
