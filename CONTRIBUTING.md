@@ -49,24 +49,18 @@ yarn run build
 To only run linting:
 
 ```sh
-yarn run lint
+npm run lint
 ```
 
 To only run tests:
 
 ```sh
-yarn run test
-```
-
-To continuously watch and run tests, run the following:
-
-```sh
-yarn run test:watch
+npm run test
 ```
 
 ### Docs
 
-Improvements to the documentation are always welcome. You can find them in the on [`syncstate.github.io`](https://github.com/syncstate/syncstate.github.io) path. We use [Docusaurus](https://docusaurus.io/) to build our documentation website. The website is published automatically whenever the `master` branch is updated.
+Improvements to the documentation are always welcome. You can find them in the on [`syncstate.github.io`](https://github.com/syncstate/syncstate.github.io) repository. We use [Docusaurus](https://docusaurus.io/) to build our documentation website. The website is published automatically whenever the `master` branch is updated.
 
 ### Examples
 
