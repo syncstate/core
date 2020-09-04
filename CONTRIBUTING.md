@@ -85,7 +85,7 @@ yarn start
 
 Not all examples have tests. If you see an example project without tests, you are very welcome to add them in a way consistent with the examples that have tests.
 
-Please visit the [Examples page](https://SyncState.js.org/introduction/examples) for information on running individual examples.
+Please visit the [Examples page](https://syncstate.github.io/docs/counter-example) for information on running individual examples.
 
 ### Sending a Pull Request
 
