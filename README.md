@@ -79,24 +79,23 @@ ReactDOM.render(
 );
 
 function App() {
-	/**
-	 * useDoc hook with no arguments returns the root document and the function to modify the document.
-	 * This also adds a listener at the document root and updates the component
+  /**
+   * useDoc hook with no arguments returns the root document and the function to modify the document.
+   * This also adds a listener at the document root and updates the component
    * when the document changes.
-	 */
+   */
   const [doc, setDoc] = useDoc();
 
   const increment = () => {
-    setDoc(doc => {
-
-			// This looks like a mutation but here we are updating the draft state
-			// using Immer.js which generates JSON patches for our internal reducers.
+    setDoc((doc) => {
+      // This looks like a mutation but here we are updating the draft state
+      // using Immer.js which generates JSON patches for our internal reducers.
       doc.counter++;
     });
   };
 
-	const decrement = () => {
-    setDoc(doc => {
+  const decrement = () => {
+    setDoc((doc) => {
       doc.counter--;
     });
   };
@@ -105,17 +104,15 @@ function App() {
 
   return (
     <div>
-	    <button onClick={decrement}>-</button>
-			{doc.count}
-		  <button onClick={increment}>+</button>
+      <button onClick={decrement}>-</button>
+      {doc.count}
+      <button onClick={increment}>+</button>
     </div>
   );
 }
 ```
 
 ## Checkout Sanket launching SyncState at [React Native EU 2020](https://youtu.be/IWkQxg6RQ-A)
-
-
 
 Built with ❤️ at GeekyAnts.
 
