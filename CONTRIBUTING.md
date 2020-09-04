@@ -4,7 +4,7 @@ We want to make contributing to this project as easy and transparent as possible
 
 ## Reporting Issues and Asking Questions
 
-Before opening an issue, please search the [issue tracker](https://github.com/SyncStatejs/SyncState/issues) to make sure your issue hasn't already been reported.
+Before opening an issue, please search the [issue tracker](https://github.com/syncstate/core/issues) to make sure your issue hasn't already been reported.
 
 ### Bugs and Improvements
 
@@ -14,11 +14,9 @@ As SyncState is stable software, changes to its behavior are very carefully cons
 
 ### Getting Help
 
-**For support or usage questions like “how do I do X with SyncState” and “my code doesn't work”, please search and ask on [StackOverflow with a SyncState tag](http://stackoverflow.com/questions/tagged/SyncState?sort=votes&pageSize=50) first.**
+As SyncState is very new to the community, we understand that solution to your question can not be found easily. But we would strongly suggest to go through the Documentation and FAQ's , if you still have the query please add your questions on **StackOverflow**. As SyncState will mature we are sure you can easily find answers to your questions.
 
-We ask you to do this because StackOverflow has a much better job at keeping popular questions visible. Unfortunately good answers get lost and outdated on GitHub.
-
-Some questions take a long time to get an answer. **If your question gets closed or you don't get a reply on StackOverflow for longer than a few days,** we encourage you to post an issue linking to your question. We will close your issue but this will give people watching the repo an opportunity to see your question and reply to it on StackOverflow if they know the answer.
+Some questions may take longer than expected to get answered, in that case we would encourage you to post an issue linking to your question. We will close your issue but this will give people watching the repo an opportunity to see your question and reply to it on StackOverflow if they know the answer.
 
 Please be considerate when doing this as this is not the primary purpose of the issue tracker.
 
@@ -26,26 +24,24 @@ Please be considerate when doing this as this is not the primary purpose of the 
 
 On both websites, it is a good idea to structure your code and question in a way that is easy to read to entice people to answer it. For example, we encourage you to use syntax highlighting, indentation, and split text in paragraphs.
 
-Please keep in mind that people spend their free time trying to help you. You can make it easier for them if you provide versions of the relevant libraries and a runnable small project reproducing your issue. You can put your code on [JSBin](http://jsbin.com) or, for bigger projects, on GitHub. Make sure all the necessary dependencies are declared in `package.json` so anyone can run `npm install && npm start` and reproduce your issue.
+Please keep in mind that people spend their free time trying to help you. You can make it easier for them if you provide versions of the relevant libraries and a runnable small project reproducing your issue. You can put your code on [JSBin](http://jsbin.com) or, for bigger projects, on GitHub. Make sure all the necessary dependencies are declared in `package.json` so anyone can run `yarn install && yarn start` and reproduce your issue.
 
 ## Development
 
-Visit the [issue tracker](https://github.com/SyncStatejs/SyncState/issues) to find a list of open issues that need attention.
+Visit the [issue tracker](https://github.com/syncstate/core/issues) to find a list of open issues that need attention.
 
 Fork, then clone the repo:
 
 ```sh
-git clone https://github.com/your-username/SyncState.git
+git clone https://github.com/syncstate/core.git
 ```
 
 ### Building
 
 #### Building SyncState
 
-Running the `build` task will create a CommonJS module-per-module build, a ES Modules build and a UMD build.
-
 ```sh
-npm run build
+yarn run build
 ```
 
 ### Testing and Linting
@@ -53,37 +49,44 @@ npm run build
 To only run linting:
 
 ```sh
-npm run lint
+yarn run lint
 ```
 
 To only run tests:
 
 ```sh
-npm run test
+yarn run test
 ```
 
 To continuously watch and run tests, run the following:
 
 ```sh
-npm run test:watch
+yarn run test:watch
 ```
 
 ### Docs
 
-Improvements to the documentation are always welcome. You can find them in the [`docs`](/website/docs) path. We use [Docusaurus](https://docusaurus.io/) to build our documentation website. The website is published automatically whenever the `master` branch is updated.
+Improvements to the documentation are always welcome. You can find them in the on [`syncstate.github.io`](https://github.com/syncstate/syncstate.github.io) path. We use [Docusaurus](https://docusaurus.io/) to build our documentation website. The website is published automatically whenever the `master` branch is updated.
 
 ### Examples
 
-SyncState comes with [official examples](https://SyncState.js.org/introduction/examples) to demonstrate various concepts and best practices.
+SyncState comes with a Todo App example to demonstrate various concepts and best practices.
 
-When adding a new example, please adhere to the style and format of the existing examples, and try to reuse as much code as possible. For example, `index.html`, `server.js`, and `webpack.config.js` can typically be reused.
+When adding a new example, please adhere to the style and format of the existing examples, and try to reuse as much code as possible.
 
 #### Testing the Examples
 
 To test the official SyncState examples, run the following:
 
+Install dependencies using yarn
+
 ```sh
-npm run examples:test
+yarn
+```
+Then run the example using
+
+```sh
+yarn start
 ```
 
 Not all examples have tests. If you see an example project without tests, you are very welcome to add them in a way consistent with the examples that have tests.
@@ -94,11 +97,9 @@ Please visit the [Examples page](https://SyncState.js.org/introduction/examples)
 
 For non-trivial changes, please open an issue with a proposal for a new feature or refactoring before starting on the work. We don't want you to waste your efforts on a pull request that we won't want to accept.
 
-On the other hand, sometimes the best way to start a conversation _is_ to send a pull request. Use your best judgement!
-
 In general, the contribution workflow looks like this:
 
-- Open a new issue in the [Issue tracker](https://github.com/SyncStatejs/SyncState/issues).
+- Open a new issue in the [Issue tracker](https://github.com/syncstate/core/issues).
 - Fork the repo.
 - Create a new feature branch based off the `master` branch.
 - Make sure all tests pass and there are no linting errors.
