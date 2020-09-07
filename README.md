@@ -6,6 +6,9 @@ SyncState is a **document-based state management library** for JS apps that can 
 - Based on JSON patches.
 - Plugins for History, Multi-user and more.
 - Powered by Redux and Immer
+## Documentation
+
+Find Complete **Documentation** [here](https://syncstate.github.io/docs/getting-started)
 
 **Functional at the core. Mutate on the surface.**
 
@@ -22,10 +25,6 @@ A plugin that stores the changes as JSON patches (instead of a series of app sna
 **Easily build multiuser apps**
 
 **The remote plugin helps** achieve multiuser functionality. It comes with a bit of server piece that works for conflict resolution.
-
-## Documentation
-
-Find Complete **Documentation** [here](https://syncstate.github.io/docs/getting-started)
 
 ## Examples
 
@@ -114,9 +113,10 @@ function App() {
 }
 ```
 
-## Checkout Sanket launching SyncState at [React Native EU 2020](https://youtu.be/IWkQxg6RQ-A)
+## Watch the introductory talk about SyncState at [React Native EU 2020](https://youtu.be/IWkQxg6RQ-A)
+[![introductory talk about SyncState](https://github.com/syncstate/syncstate.github.io/blob/fix/docs/img/reactnative_eu.png)](https://youtu.be/IWkQxg6RQ-A?t=11072)
 
-Built with ❤️ &nbsp; at GeekyAnts.
+Built with ❤️ &nbsp; at [GeekyAnts](https://geekyants.com).
 
 ## Authors : 
 - Sanket Sahu ([@sanketsahu](https://twitter.com/sanketsahu))
