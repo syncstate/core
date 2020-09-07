@@ -15,6 +15,7 @@ import useSyncState from './storeMethods/useSyncState';
 import { SyncStatePath } from './index';
 import removeFirstElement from './utils/jsonPatchPathToImmerPath';
 import jsonPatchPathToImmerPath from './utils/jsonPatchPathToImmerPath';
+import getNextId from './utils/getNextId';
 
 type ReduxStore = Store<
   CombinedState<{
@@ -28,8 +29,8 @@ export default class DocStore {
   dispatch: Dispatch<any>;
   subscribe: (listener: () => void) => Unsubscribe;
   plugins: Array<any>;
-  private observers: Array<Observer> = [];
-  private interceptors: Array<Interceptor> = [];
+  private observers = new Map<number, Observer>();
+  private interceptors = new Map<number, Interceptor>();
 
   constructor(
     initialDoc: {},
@@ -147,16 +148,16 @@ by passing name in plugin configuration to createPlugin.
     callback: any,
     depth: number = 1
   ) => {
-    const newLength = this.observers.push({
+    const observerId = getNextId();
+    const newLength = this.observers.set(observerId, {
       subtree,
       path,
       callback,
       depth,
     });
-    const observerIndex = newLength - 1;
 
     return () => {
-      this.observers.splice(observerIndex, 1);
+      this.observers.delete(observerId);
     };
   };
 
@@ -166,16 +167,16 @@ by passing name in plugin configuration to createPlugin.
     callback: any,
     depth: number = 1
   ) => {
-    const newLength = this.interceptors.push({
+    const interceptorId = getNextId();
+    const newLength = this.interceptors.set(interceptorId, {
       subtree,
       path,
       callback,
       depth,
     });
-    const interceptorIndex = newLength - 1;
 
     return () => {
-      this.interceptors.splice(interceptorIndex, 1);
+      this.interceptors.delete(interceptorId);
     };
   };
 

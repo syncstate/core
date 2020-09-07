@@ -7,7 +7,7 @@ export type Observer = {
   depth: number;
 };
 
-export const createObserveMiddleware = (observers: Array<Observer>) => {
+export const createObserveMiddleware = (observers: Map<number, Observer>) => {
   return (store: any) => (next: any) => (action: any) => {
     const result = next(action);
 

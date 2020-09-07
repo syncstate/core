@@ -8,7 +8,9 @@ export type Interceptor = {
   depth: number;
 };
 
-export const createInterceptMiddleware = (interceptors: Array<Interceptor>) => {
+export const createInterceptMiddleware = (
+  interceptors: Map<number, Interceptor>
+) => {
   return (store: any) => (next: any) => (action: any) => {
     let discardAction = false;
 
