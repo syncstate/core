@@ -938,22 +938,22 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@syncstate/history@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/@syncstate/history/-/history-0.3.1.tgz#61d2579422a4220cda3600535e288a192e236b49"
-  integrity sha512-YYSHa4R+IEV0lXcuktKyhzKsXttve1pq13hFZR8RoF3vLY0YkNLxG5hUIrpg+NvproL0tLgzFy9kYfoh86Y5HA==
+"@syncstate/history@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.npmjs.org/@syncstate/history/-/history-0.6.0.tgz#b4f424193cd055bcc7865ab0ce9dccebcaa584ca"
+  integrity sha512-6yFoqPtD2n7xrGy8FwaKKZVySUdA8MpfqBaUgfUzy32OxYKPgpeoHJpLwuEzYV5lIVqg5mny+J2TruyF5wJDvA==
 
-"@syncstate/react@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/@syncstate/react/-/react-0.2.0.tgz#8182650e7e02720897f2956650164a586f7467e0"
-  integrity sha512-2kiGdibsaNIbJ+yia8Cswp6m4cB6GN/o1SrqRRC79kiPjE96H7Lazc81hm17Jgq9rgsqBSZ7DNc9SAdLKL1amg==
+"@syncstate/react@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.npmjs.org/@syncstate/react/-/react-0.6.0.tgz#3eb1fa8631005beac403cdf7ab7c90131457605c"
+  integrity sha512-85la8ABCbc+QOJx8VabvxUTzYTAW+q1S96Tpk31Ek3orfBUlRfL4onUqdyz0QpJM8xFbZdNatGpxpgnbcaavyw==
   dependencies:
     immer "^7.0.7"
 
-"@syncstate/remote-client@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.npmjs.org/@syncstate/remote-client/-/remote-client-0.1.2.tgz#c214d4be5b6f6ef215ff785275e4b5eea0318b56"
-  integrity sha512-WKJLV2909gHqFbxQt8mcuCwHwMukLOI0ocZeo9FO1hVXdPIrWLkY9FxVcxHwt6fm+PJUonCYIo6lQsf334fkpA==
+"@syncstate/remote-client@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.npmjs.org/@syncstate/remote-client/-/remote-client-0.6.0.tgz#0aae7c7ba560928c463a50729ad9d3a98d5c73df"
+  integrity sha512-eIVR48e0WhkLBmW2NDLSogFp1xeR8iqM8JCp4rSmQnhfa1ntSn7fWlW6Xc/bMqgvdR9PmW3qCNYQopfBbEF/9Q==
 
 "@types/prop-types@*":
   version "15.7.3"

@@ -147,6 +147,13 @@ export function TodoApp() {
         >
           Redo till breakpoint
         </button>
+        <button
+          onClick={() => {
+            setTodos([]);
+          }}
+        >
+          Clear
+        </button>
       </div>
     </div>
   );
