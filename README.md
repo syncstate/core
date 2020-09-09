@@ -101,8 +101,6 @@ function App() {
     });
   };
 
-  let input;
-
   return (
     <div>
       <button onClick={decrement}>-</button>
