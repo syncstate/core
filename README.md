@@ -101,8 +101,6 @@ function App() {
     });
   };
 
-
-
   return (
     <div>
       <button onClick={decrement}>-</button>
