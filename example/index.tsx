@@ -62,6 +62,8 @@ const [test, setTest] = store.useDoc('/test');
 setTest('kkkkkk');
 // undoable(() => true);
 
+console.log(store.getPatches('doc'));
+
 const disposeObs = store.observe(
   'doc',
   '/todos',
