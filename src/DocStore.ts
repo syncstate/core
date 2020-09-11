@@ -37,9 +37,6 @@ export default class DocStore {
     topReducer: any,
     pluginCreators: Array<any> = []
   ) {
-    // @ts-ignore
-    window['store'] = this;
-
     const initialState = {
       doc: {
         state: initialDoc,
@@ -51,8 +48,8 @@ export default class DocStore {
     this.plugins = pluginCreators.map(pluginCreator => {
       const plugin = pluginCreator(this);
       if (pluginNames.find(pName => pName === plugin.name)) {
-        throw new Error(`SyncState plugin named ${plugin.name} already exists! You can override plugin name 
-by passing name in plugin configuration to createPlugin. 
+        throw new Error(`SyncState plugin named ${plugin.name} already exists! You can override plugin name
+by passing name in plugin configuration to createPlugin.
         createStore({}, [
           myPlugin.createPlugin({
             name: "myOtherPlugin"
