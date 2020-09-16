@@ -112,7 +112,7 @@ function App() {
 ```
 
 ## Watch the introductory talk about SyncState at [React Native EU 2020](https://youtu.be/IWkQxg6RQ-A)
-[![introductory talk about SyncState](https://github.com/syncstate/syncstate.github.io/blob/fix/docs/img/reactnative_eu.png)](https://youtu.be/IWkQxg6RQ-A?t=11072)
+[![introductory talk about SyncState](https://github.com/syncstate/syncstate.github.io/blob/master/img/reactnative_eu.png)](https://youtu.be/IWkQxg6RQ-A?t=11072)
 
 Built with ❤️ &nbsp; at [GeekyAnts](https://geekyants.com).
 
