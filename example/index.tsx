@@ -62,6 +62,17 @@ const [test, setTest] = store.useDoc('/test');
 setTest('kkkkkk');
 // undoable(() => true);
 
+const disposeCompute = store.computeDoc((getValue, change) => {
+  const todos = getValue('/todos');
+
+  // const [val, setVal] = store.useDoc("path/to/nested/data")
+  console.log('$$$computed todos.length', todos.length, 'change', change);
+});
+
+setTimeout(() => {
+  disposeCompute();
+}, 5000);
+
 console.log(store.getPatches('doc'));
 
 const disposeObs = store.observe(

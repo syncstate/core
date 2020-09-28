@@ -16,6 +16,8 @@ import { SyncStatePath } from './index';
 import removeFirstElement from './utils/jsonPatchPathToImmerPath';
 import jsonPatchPathToImmerPath from './utils/jsonPatchPathToImmerPath';
 import getNextId from './utils/getNextId';
+import { Watch, ComputeCallback } from 'types';
+import { createPostObserveMiddleware } from './postObserveMiddleware';
 
 type ReduxStore = Store<
   CombinedState<{
@@ -31,6 +33,7 @@ export default class DocStore {
   plugins: Array<any>;
   private observers = new Map<number, Observer>();
   private interceptors = new Map<number, Interceptor>();
+  private postObserveCallbacks: Array<() => void> = [];
 
   constructor(
     initialDoc: {},
@@ -97,6 +100,7 @@ by passing name in plugin configuration to createPlugin.
         applyMiddleware(
           createInterceptMiddleware(this.interceptors),
           createObserveMiddleware(this.observers),
+          createPostObserveMiddleware(this.postObserveCallbacks),
           ...this.plugins.map(p => p.middleware)
         )
       )
@@ -117,6 +121,11 @@ by passing name in plugin configuration to createPlugin.
         },
       });
     });
+
+    if (process.env.NODE_ENV !== 'production') {
+      // @ts-ignore
+      window['store'] = this;
+    }
   }
   getState = (subtree: string) => {
     const subtreeState = this.reduxStore.getState()[subtree];
@@ -151,7 +160,7 @@ by passing name in plugin configuration to createPlugin.
   observe = (
     subtree: string,
     path: string = '',
-    callback: any,
+    callback: (value: any, change: any) => void,
     depth: number = 1
   ) => {
     const observerId = getNextId();
@@ -162,15 +171,27 @@ by passing name in plugin configuration to createPlugin.
       depth,
     });
 
+    console.log(
+      '$$$$added observer with id ',
+      {
+        subtree,
+        path,
+        callback,
+        depth,
+      },
+      observerId
+    );
+
     return () => {
       this.observers.delete(observerId);
+      console.log('$$$$$removing observer with id ', observerId);
     };
   };
 
   intercept = (
     subtree: string,
     path: string = '',
-    callback: any,
+    callback: (value: any, change: any) => any,
     depth: number = 1
   ) => {
     const interceptorId = getNextId();
@@ -186,7 +207,79 @@ by passing name in plugin configuration to createPlugin.
     };
   };
 
+  postObserve = (callback: () => void) => {
+    this.postObserveCallbacks.push(callback);
+  };
+
   useSyncState = (subtree: string, path: string = '') =>
     useSyncState(this, subtree, path);
   useDoc = (path: string = '') => useSyncState(this, 'doc', path);
+
+  computeDoc = (computeCallback: ComputeCallback) => {
+    return this.compute('doc', computeCallback);
+  };
+
+  compute = (subtree: string, computeCallback: ComputeCallback) => {
+    let oldDispose: any;
+    const watch: Watch = (
+      watchPath: string,
+      depth: number = 1,
+      firstWatch: boolean = false
+    ) => {
+      if (oldDispose) {
+        oldDispose();
+      }
+
+      if (!firstWatch) {
+        this.postObserve(() => {
+          // postObserve bcoz otherwise a new observer gets added to the end of the array when calling
+          // a previous observer leading to an infinite loop
+          console.log('$$$$compute observer 1');
+          const dispose = this.observe(
+            subtree,
+            watchPath,
+            (updatedValue, change) => {
+              oldDispose = dispose;
+              computeCallback(getValue, change);
+            },
+            depth
+          );
+        });
+      } else {
+        console.log('$$$$compute observer 2');
+        const dispose = this.observe(
+          subtree,
+          watchPath,
+          (updatedValue, change) => {
+            oldDispose = dispose;
+            computeCallback(getValue, change);
+          },
+          depth
+        );
+      }
+
+      // return dispose;
+    };
+
+    const getValue = (
+      path: string,
+      depth: number = 1,
+      firstRun: boolean = false
+    ) => {
+      watch(path, depth, firstRun);
+      const [doc, setDoc] = this.useSyncState(subtree, path);
+      return doc;
+    };
+
+    computeCallback(
+      (path: string, depth: number = 1) => getValue(path, depth, true),
+      {}
+    );
+
+    return () => {
+      if (oldDispose) {
+        oldDispose();
+      }
+    };
+  };
 }

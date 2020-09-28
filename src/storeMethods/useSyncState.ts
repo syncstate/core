@@ -1,4 +1,4 @@
-import { produceWithPatches } from 'immer';
+import { Patch, produceWithPatches } from 'immer';
 import DocStore from '../DocStore';
 import { SyncStatePath } from '../index';
 import jsonPatchPathToImmerPath from '../utils/jsonPatchPathToImmerPath';
@@ -33,11 +33,8 @@ export default function useSyncState(
         // let parentPath = [...path];
         const immerPath = jsonPatchPathToImmerPath(path);
         const childKey = immerPath.pop();
-        path = immerPath.join('/');
-        stateAtPath = store.getStateAtPath(
-          subtree,
-          immerPathToJsonPatchPath(immerPath)
-        );
+        path = immerPathToJsonPatchPath(immerPath); // immerPath.join('/');
+        stateAtPath = store.getStateAtPath(subtree, path);
         produceCallback = (draft: any) => {
           if (childKey) {
             draft[childKey] = callbackOrData;
@@ -54,12 +51,15 @@ export default function useSyncState(
       );
       // console.log(path, 'path');
       // console.log(JSON.stringify(patches, null, 2), 'patches before');
-      patches = patches.map((p: any) => {
-        return { ...p, path: path + '/' + p.path.join('/') };
+      patches = patches.map((p: Patch) => {
+        return {
+          ...p,
+          path: path + immerPathToJsonPatchPath(p.path),
+        };
       });
 
       inversePatches = inversePatches.map((p: any) => {
-        return { ...p, path: path + '/' + p.path.join('/') };
+        return { ...p, path: path + immerPathToJsonPatchPath(p.path) };
       });
       // console.log(JSON.stringify(patches, null, 2), 'patches');
 

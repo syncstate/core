@@ -50,3 +50,4 @@ export function createDocStore(initialDoc: {}, plugins?: Array<any>) {
 
 export type SyncStatePath = Array<string | number>;
 export { DocStore };
+export * from './types';

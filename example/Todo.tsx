@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import history from '@syncstate/history';
-import { useDoc } from '@syncstate/react';
+import { useDoc, useComputed } from '@syncstate/react';
 import { TodoItem } from './TodoItem';
 import { useState, useEffect } from 'react';
 
@@ -17,6 +17,12 @@ export function TodoApp() {
   useEffect(() => {
     dispatch(history.enable('/todos'));
   }, []);
+
+  // const [todoLength] = useComputed('doc', getValue => {
+  //   const todos = getValue('/todos');
+
+  //   return todos.length;
+  // });
 
   // console.log('todo app render');
 

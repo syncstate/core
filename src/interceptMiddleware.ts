@@ -4,7 +4,7 @@ import get from 'lodash.get';
 export type Interceptor = {
   subtree: string;
   path: string;
-  callback: any;
+  callback: (value: any, change: any) => any;
   depth: number;
 };
 

@@ -3,7 +3,7 @@ import get from 'lodash.get';
 export type Observer = {
   subtree: string;
   path: string;
-  callback: any;
+  callback: (value: any, change: any) => void;
   depth: number;
 };
 
@@ -12,7 +12,7 @@ export const createObserveMiddleware = (observers: Map<number, Observer>) => {
     const result = next(action);
 
     if (action.type === 'PATCH') {
-      observers.forEach(observer => {
+      observers.forEach((observer, key) => {
         const payloadPath = action.payload.patch.path;
 
         if (observer.subtree !== action.payload.subtree) {
