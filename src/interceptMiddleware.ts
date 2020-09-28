@@ -21,7 +21,10 @@ export const createInterceptMiddleware = (
         }
         const payloadPath: string = action.payload.patch.path;
 
-        if (interceptor.subtree !== action.payload.subtree) {
+        if (
+          interceptor.subtree !== action.payload.subtree ||
+          interceptor.depth < 0
+        ) {
           // Skip this interceptor if interceptor and action.payload subtrees do not match
           return;
         }

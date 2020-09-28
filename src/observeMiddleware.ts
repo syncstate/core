@@ -15,7 +15,7 @@ export const createObserveMiddleware = (observers: Map<number, Observer>) => {
       observers.forEach((observer, key) => {
         const payloadPath = action.payload.patch.path;
 
-        if (observer.subtree !== action.payload.subtree) {
+        if (observer.subtree !== action.payload.subtree || observer.depth < 0) {
           // Skip this observer if observer and action.payload subtrees do not match
           return;
         }
