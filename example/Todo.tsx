@@ -18,11 +18,11 @@ export function TodoApp() {
     dispatch(history.enable('/todos'));
   }, []);
 
-  // const [todoLength] = useComputed('doc', getValue => {
-  //   const todos = getValue('/todos');
+  const [todoLength] = useComputed('doc', getValue => {
+    const todos = getValue('/todos');
 
-  //   return todos.length;
-  // });
+    return todos.length;
+  });
 
   // console.log('todo app render');
 

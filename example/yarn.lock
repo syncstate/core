@@ -943,10 +943,10 @@
   resolved "https://registry.npmjs.org/@syncstate/history/-/history-0.6.0.tgz#b4f424193cd055bcc7865ab0ce9dccebcaa584ca"
   integrity sha512-6yFoqPtD2n7xrGy8FwaKKZVySUdA8MpfqBaUgfUzy32OxYKPgpeoHJpLwuEzYV5lIVqg5mny+J2TruyF5wJDvA==
 
-"@syncstate/react@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.npmjs.org/@syncstate/react/-/react-0.6.0.tgz#3eb1fa8631005beac403cdf7ab7c90131457605c"
-  integrity sha512-85la8ABCbc+QOJx8VabvxUTzYTAW+q1S96Tpk31Ek3orfBUlRfL4onUqdyz0QpJM8xFbZdNatGpxpgnbcaavyw==
+"@syncstate/react@^0.7.0-rc.3":
+  version "0.7.0-rc.3"
+  resolved "https://registry.npmjs.org/@syncstate/react/-/react-0.7.0-rc.3.tgz#d223e6de19f4049398c6000acef2c0c378214d81"
+  integrity sha512-wvTaMWqyduSla+FXzBNbj75QNHqyQiUGdsjllAkPnwTrPEgDoWFFY63B1OjpxyWGZpA6MR0YVQFfDo1RGNjENA==
   dependencies:
     immer "^7.0.7"
 
