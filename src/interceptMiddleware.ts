@@ -1,5 +1,7 @@
 import { produce } from 'immer';
 import get from 'lodash.get';
+import immerPathToJsonPatchPath from './utils/immerPathToJsonPatchPath';
+import jsonPatchPathToImmerPath from './utils/jsonPatchPathToImmerPath';
 
 export type Interceptor = {
   subtree: string;
@@ -36,15 +38,16 @@ export const createInterceptMiddleware = (
 
         // If depth x, call for x levels extra below interceptor path
         else if (interceptor.depth > 0 && interceptor.depth !== Infinity) {
-          const matchingLengthPayloadPathArray = payloadPath
-            .split('/')
-            .slice(0, interceptor.path.split('/').length);
+          const matchingLengthPayloadPathArray = jsonPatchPathToImmerPath(
+            payloadPath
+          ).slice(0, jsonPatchPathToImmerPath(interceptor.path).length);
           const remainingPayloadPathLength =
-            payloadPath.split('/').length -
+            jsonPatchPathToImmerPath(payloadPath).length -
             matchingLengthPayloadPathArray.length;
 
           if (
-            matchingLengthPayloadPathArray.join('/') === interceptor.path &&
+            immerPathToJsonPatchPath(matchingLengthPayloadPathArray) ===
+              interceptor.path &&
             remainingPayloadPathLength <= interceptor.depth
           ) {
             discardAction = callInterceptor(interceptor, store, action);

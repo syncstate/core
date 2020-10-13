@@ -1,4 +1,6 @@
 import get from 'lodash.get';
+import immerPathToJsonPatchPath from './utils/immerPathToJsonPatchPath';
+import jsonPatchPathToImmerPath from './utils/jsonPatchPathToImmerPath';
 
 export type Observer = {
   subtree: string;
@@ -27,15 +29,16 @@ export const createObserveMiddleware = (observers: Map<number, Observer>) => {
 
         // If depth x, call for x levels extra below observer path
         else if (observer.depth > 0 && observer.depth !== Infinity) {
-          const matchingLengthPayloadPathArray = payloadPath
-            .split('/')
-            .slice(0, observer.path.split('/').length);
+          const matchingLengthPayloadPathArray = jsonPatchPathToImmerPath(
+            payloadPath
+          ).slice(0, jsonPatchPathToImmerPath(observer.path).length);
           const remainingPayloadPathLength =
-            payloadPath.split('/').length -
+            jsonPatchPathToImmerPath(payloadPath).length -
             matchingLengthPayloadPathArray.length;
 
           if (
-            matchingLengthPayloadPathArray.join('/') === observer.path &&
+            immerPathToJsonPatchPath(matchingLengthPayloadPathArray) ===
+              observer.path &&
             remainingPayloadPathLength <= observer.depth
           ) {
             callObserver(observer, store, action);

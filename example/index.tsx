@@ -57,9 +57,24 @@ store.intercept(
 );
 
 const [doc, setDoc] = store.useSyncState('doc');
-setDoc(doc => (doc.test = 'paihwdih'));
-const [test, setTest] = store.useDoc('/test');
-setTest('kkkkkk');
+setDoc(doc => {
+  doc.test = {};
+  doc.test['/test3/test4/test5'] = 'paihwdih';
+});
+// const [test, setTest] = store.useDoc('/test');
+// setTest('kkkkkk');
+store.observe(
+  'doc',
+  '/test',
+  val => {
+    console.log('rerererererer &*(&(&&*(');
+  },
+  1
+);
+
+setTimeout(() => {
+  setDoc(doc => (doc.test['/test3/test4/test5'] = 'KKKkkkkkk'));
+}, 2000);
 // undoable(() => true);
 
 const disposeCompute = store.computeDoc((getValue, change) => {
