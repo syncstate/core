@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build",
+    "build": "NODE_ENV=production tsdx build",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
     "prepare": "tsdx build"
@@ -42,6 +42,7 @@
     "trailingComma": "es5"
   },
   "devDependencies": {
+    "@rollup/plugin-strip": "^2.0.0",
     "@types/lodash.get": "^4.4.6",
     "@types/react": "^16.9.46",
     "@types/react-dom": "^16.9.8",

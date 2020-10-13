@@ -1,4 +1,4 @@
-export const createPostObserveMiddleware = (callbacks: Array<() => void>) => {
+export const createPostInterceptMiddleware = (callbacks: Array<() => void>) => {
   return (store: any) => (next: any) => (action: any) => {
     const result = next(action);
 

@@ -18,6 +18,7 @@ import jsonPatchPathToImmerPath from './utils/jsonPatchPathToImmerPath';
 import getNextId from './utils/getNextId';
 import { Watch, ComputeCallback } from 'types';
 import { createPostObserveMiddleware } from './postObserveMiddleware';
+import { createPostInterceptMiddleware } from './postInterceptMiddleware';
 
 type ReduxStore = Store<
   CombinedState<{
@@ -34,6 +35,7 @@ export default class DocStore {
   private observers = new Map<number, Observer>();
   private interceptors = new Map<number, Interceptor>();
   private postObserveCallbacks: Array<() => void> = [];
+  private postInterceptCallbacks: Array<() => void> = [];
 
   constructor(
     initialDoc: {},
@@ -100,6 +102,7 @@ by passing name in plugin configuration to createPlugin.
         applyMiddleware(
           createInterceptMiddleware(this.interceptors),
           createObserveMiddleware(this.observers),
+          createPostInterceptMiddleware(this.postInterceptCallbacks),
           createPostObserveMiddleware(this.postObserveCallbacks),
           ...this.plugins.map(p => p.middleware)
         )
@@ -164,23 +167,25 @@ by passing name in plugin configuration to createPlugin.
     depth: number = 1
   ) => {
     const observerId = getNextId();
-    const newLength = this.observers.set(observerId, {
-      subtree,
-      path,
-      callback,
-      depth,
-    });
-
-    console.log(
-      '$$$$added observer with id ',
-      {
+    this.postObserve(() => {
+      const newLength = this.observers.set(observerId, {
         subtree,
         path,
         callback,
         depth,
-      },
-      observerId
-    );
+      });
+
+      console.log(
+        '$$$$added observer with id ',
+        {
+          subtree,
+          path,
+          callback,
+          depth,
+        },
+        observerId
+      );
+    });
 
     return () => {
       this.observers.delete(observerId);
@@ -195,11 +200,13 @@ by passing name in plugin configuration to createPlugin.
     depth: number = 1
   ) => {
     const interceptorId = getNextId();
-    const newLength = this.interceptors.set(interceptorId, {
-      subtree,
-      path,
-      callback,
-      depth,
+    this.postIntercept(() => {
+      const newLength = this.interceptors.set(interceptorId, {
+        subtree,
+        path,
+        callback,
+        depth,
+      });
     });
 
     return () => {
@@ -209,6 +216,9 @@ by passing name in plugin configuration to createPlugin.
 
   postObserve = (callback: () => void) => {
     this.postObserveCallbacks.push(callback);
+  };
+  postIntercept = (callback: () => void) => {
+    this.postInterceptCallbacks.push(callback);
   };
 
   useSyncState = (subtree: string, path: string = '') =>
