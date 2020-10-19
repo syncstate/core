@@ -4,6 +4,7 @@ import {
   produceWithPatches,
   enablePatches,
 } from 'immer';
+import immerPathToJsonPatchPath from './utils/immerPathToJsonPatchPath';
 
 import DocStore from './DocStore';
 import jsonPatchPathToImmerPath from './utils/jsonPatchPathToImmerPath';
@@ -49,5 +50,5 @@ export function createDocStore(initialDoc: {}, plugins?: Array<any>) {
 }
 
 export type SyncStatePath = Array<string | number>;
-export { DocStore };
+export { DocStore, jsonPatchPathToImmerPath, immerPathToJsonPatchPath };
 export * from './types';
