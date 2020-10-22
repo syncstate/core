@@ -175,21 +175,21 @@ by passing name in plugin configuration to createPlugin.
         depth,
       });
 
-      console.log(
-        '$$$$added observer with id ',
-        {
-          subtree,
-          path,
-          callback,
-          depth,
-        },
-        observerId
-      );
+      // console.log(
+      //   '$$$$added observer with id ',
+      //   {
+      //     subtree,
+      //     path,
+      //     callback,
+      //     depth,
+      //   },
+      //   observerId
+      // );
     });
 
     return () => {
       this.observers.delete(observerId);
-      console.log('$$$$$removing observer with id ', observerId);
+      // console.log('$$$$$removing observer with id ', observerId);
     };
   };
 
@@ -244,7 +244,7 @@ by passing name in plugin configuration to createPlugin.
         this.postObserve(() => {
           // postObserve bcoz otherwise a new observer gets added to the end of the array when calling
           // a previous observer leading to an infinite loop
-          console.log('$$$$compute observer 1');
+          // console.log('$$$$compute observer 1');
           const dispose = this.observe(
             subtree,
             watchPath,
@@ -256,7 +256,7 @@ by passing name in plugin configuration to createPlugin.
           );
         });
       } else {
-        console.log('$$$$compute observer 2');
+        // console.log('$$$$compute observer 2');
         const dispose = this.observe(
           subtree,
           watchPath,
