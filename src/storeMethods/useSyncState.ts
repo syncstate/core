@@ -14,8 +14,9 @@ export default function useSyncState(
   return [
     stateAtPath,
     (callbackOrData: any) => {
+      let newPath = path; // Avoid mutating the closure value of path
       // Do NOT use above stateAtPath, if you do, you get stale value in the closure if you are reusing this setter callback
-      let stateAtPath = store.getStateAtPath(subtree, path);
+      let stateAtPath = store.getStateAtPath(subtree, newPath);
       let replaceValue = false;
       if (typeof callbackOrData !== 'function') {
         // throw new Error(
@@ -31,10 +32,10 @@ export default function useSyncState(
       if (replaceValue) {
         // replace the received value in its parent
         // let parentPath = [...path];
-        const immerPath = jsonPatchPathToImmerPath(path);
+        const immerPath = jsonPatchPathToImmerPath(newPath);
         const childKey = immerPath.pop();
-        path = immerPathToJsonPatchPath(immerPath); // immerPath.join('/');
-        stateAtPath = store.getStateAtPath(subtree, path);
+        newPath = immerPathToJsonPatchPath(immerPath); // immerPath.join('/');
+        stateAtPath = store.getStateAtPath(subtree, newPath);
         produceCallback = (draft: any) => {
           if (childKey) {
             draft[childKey] = callbackOrData;
@@ -54,12 +55,12 @@ export default function useSyncState(
       patches = patches.map((p: Patch) => {
         return {
           ...p,
-          path: path + immerPathToJsonPatchPath(p.path),
+          path: newPath + immerPathToJsonPatchPath(p.path),
         };
       });
 
       inversePatches = inversePatches.map((p: any) => {
-        return { ...p, path: path + immerPathToJsonPatchPath(p.path) };
+        return { ...p, path: newPath + immerPathToJsonPatchPath(p.path) };
       });
       // console.log(JSON.stringify(patches, null, 2), 'patches');
 
