@@ -6,6 +6,7 @@ SyncState is a **document-based state management library** for JS apps that can 
 - Based on JSON patches.
 - Plugins for History, Multi-user and more.
 - Powered by Redux and Immer
+
 ## Documentation
 
 Find Complete **Documentation** [here](https://syncstate.github.io/docs/getting-started)
@@ -31,6 +32,9 @@ A plugin that stores the changes as JSON patches (instead of a series of app sna
 - [Counter Example](https://syncstate.github.io/docs/counter-example)
 - [Counter With Redo/Undo](https://syncstate.github.io/docs/counter-with-redo-undo-example)
 - [Todo App](https://syncstate.github.io/docs/todo-app-example)
+- [Multi User Counter](https://syncstate.github.io/docs/multi-user-counter-example)
+- [Multi User Todo](https://syncstate.github.io/docs/multi-user-todo-example)
+- [Multi User Todo With Undo/Redo](https://syncstate.github.io/docs/multi-user-todo-example-with-undo-redo)
 
 ## Contributing
 
@@ -112,15 +116,18 @@ function App() {
 ```
 
 ## Watch the introductory talk about SyncState at [React Native EU 2020](https://youtu.be/IWkQxg6RQ-A)
+
 [![introductory talk about SyncState](https://github.com/syncstate/syncstate.github.io/blob/master/img/reactnative_eu.png)](https://youtu.be/IWkQxg6RQ-A?t=11072)
 
 Built with ❤️ &nbsp; at [GeekyAnts](https://geekyants.com).
 
-## Authors : 
+## Authors :
+
 - Sanket Sahu ([@sanketsahu](https://twitter.com/sanketsahu))
-- Himanshu Satija ([@HimanshuSatija_](https://twitter.com/HimanshuSatija_))
+- Himanshu Satija ([@HimanshuSatija\_](https://twitter.com/HimanshuSatija_))
 - Rohit Singh ([@rohitistweet](https://twitter.com/rohitistweet))
 
 ## License
+
 Licensed under the MIT License, Copyright © 2020 SyncState.
 See [LICENSE](https://github.com/syncstate/core/blob/master/LICENSE) for more information.
