@@ -167,6 +167,11 @@ by passing name in plugin configuration to createPlugin.
     depth: number = 1
   ) => {
     const observerId = getNextId();
+
+    // If observe is called inside observe callback or intercept callback, it causes an infinite loop
+    // Adding this new observer in postObserveMiddleware fixes that but postObserveMiddleware is
+    // not triggered when observe is called directly because it is not a Redux action.
+    // Hence, the following dummy dispatch
     this.postObserve(() => {
       const newLength = this.observers.set(observerId, {
         subtree,
@@ -174,18 +179,13 @@ by passing name in plugin configuration to createPlugin.
         callback,
         depth,
       });
-
-      // console.log(
-      //   '$$$$added observer with id ',
-      //   {
-      //     subtree,
-      //     path,
-      //     callback,
-      //     depth,
-      //   },
-      //   observerId
-      // );
     });
+
+    this.dispatch({
+      type:
+        'dummy action to trigger postObserve Middleware when observe is not called inside an observe callback',
+    });
+    // The above
 
     return () => {
       this.observers.delete(observerId);
@@ -200,6 +200,11 @@ by passing name in plugin configuration to createPlugin.
     depth: number = 1
   ) => {
     const interceptorId = getNextId();
+
+    // If intercept is called inside intercept callback or intercept callback, it causes an infinite loop
+    // Adding this new interceptor in postInterceptMiddleware fixes that but postInterceptMiddleware is
+    // not triggered when intercept is called directly because it is not a Redux action.
+    // Hence, the following dummy dispatch
     this.postIntercept(() => {
       const newLength = this.interceptors.set(interceptorId, {
         subtree,
@@ -207,6 +212,10 @@ by passing name in plugin configuration to createPlugin.
         callback,
         depth,
       });
+    });
+    this.dispatch({
+      type:
+        'dummy action to trigger postIntercept Middleware when intercept is not called inside an intercept callback',
     });
 
     return () => {
