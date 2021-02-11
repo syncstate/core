@@ -10,14 +10,15 @@ import * as remote from '@syncstate/remote-client';
 // @ts-ignore
 import socketIOClient from 'socket.io-client';
 
-const store = createDocStore({ todos: [], filter: 'all' }, [
+const store = createDocStore({ todos: [], options: { filter: 'all' } }, [
   history.createInitializer(),
   remote.createInitializer(),
 ]);
 
 store.dispatch(remote.enableRemote('/todos'));
+store.dispatch(remote.enableRemote('/options'));
 
-const socket = socketIOClient('http://localhost:3001', {
+const socket = socketIOClient('http://localhost:3010', {
   timeout: 100000,
 });
 
@@ -30,7 +31,9 @@ remote.observeStatus(store, '/todos', loading => {
 });
 
 socket.emit('fetchDoc', '/todos');
+socket.emit('fetchDoc', '/options');
 store.dispatch(remote.setLoading('/todos', true));
+store.dispatch(remote.setLoading('/options', true));
 console.log('Wewdwd', remote.getLoading(store, '/todos'));
 
 socket.on('loaded', path => {
@@ -39,22 +42,33 @@ socket.on('loaded', path => {
 });
 
 socket.on('change', (path, patch) => {
+  console.log('Applying remote patch', patch);
   store.dispatch(remote.applyRemote(path, patch));
 });
 
-store.intercept(
-  'doc',
-  '/todos',
-  (todos, change) => {
-    if (!change.origin) {
-      // Don't emit for patches received from server
-      socket.emit('change', '/todos', change);
-    }
-    return change;
-    // return null;
-  },
-  Infinity
-);
+// store.intercept(
+//   'doc',
+//   '/todos',
+//   (todos, change) => {
+//     if (!change.origin && !remote.getLoading(store, '/todos')) {
+//       // Don't emit for patches received from server
+//       socket.emit('change', '/todos', change);
+//     }
+//     return change;
+//     // return null;
+//   },
+//   Infinity
+// );
+
+remote.onChange(store, '/todos', change => {
+  console.log(change, 'remote change ready todos');
+  socket.emit('change', '/todos', change);
+});
+
+remote.onChange(store, '/options', change => {
+  console.log(change, 'remote change ready filter');
+  socket.emit('change', '/options', change);
+});
 
 const [doc, setDoc] = store.useSyncState('doc');
 setDoc(doc => {
@@ -111,7 +125,7 @@ const disposeInt = store.intercept(
         ...change,
         patch: {
           ...change.patch,
-          value: { caption: 'Hello', completed: false },
+          value: { caption: 'Hello', completed: change.patch.value.completed },
         },
       };
     }

@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 
 export function TodoApp() {
   const todoPath = '/todos';
-  const filterPath = '/filter';
+  const filterPath = '/options/filter';
 
   const [todos, setTodos, dispatch] = useDoc(todoPath);
   const [todoFilter, setTodoFilter] = useDoc(filterPath);

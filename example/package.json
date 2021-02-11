@@ -10,7 +10,7 @@
   "dependencies": {
     "@syncstate/history": "^0.6.0",
     "@syncstate/react": "^0.7.0-rc.3",
-    "@syncstate/remote-client": "^0.6.0",
+    "@syncstate/remote-client": "^0.7.0-rc.0",
     "react-app-polyfill": "^1.0.0",
     "socket.io-client": "^2.3.0"
   },

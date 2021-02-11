@@ -950,10 +950,10 @@
   dependencies:
     immer "^7.0.7"
 
-"@syncstate/remote-client@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.npmjs.org/@syncstate/remote-client/-/remote-client-0.6.0.tgz#0aae7c7ba560928c463a50729ad9d3a98d5c73df"
-  integrity sha512-eIVR48e0WhkLBmW2NDLSogFp1xeR8iqM8JCp4rSmQnhfa1ntSn7fWlW6Xc/bMqgvdR9PmW3qCNYQopfBbEF/9Q==
+"@syncstate/remote-client@^0.7.0-rc.0":
+  version "0.7.0-rc.0"
+  resolved "https://registry.npmjs.org/@syncstate/remote-client/-/remote-client-0.7.0-rc.0.tgz#4481a7ef9d45c7f8d2235852f1d5b0835815a2dd"
+  integrity sha512-sp3dI/z/AI14SQFaY+wgqIF1lZn4bn55iMNqg5LVX14IgfXUZTFBsFr2jc5HwSsoWzHxWGVxH5bnyxH6lPEUaA==
 
 "@types/prop-types@*":
   version "15.7.3"
